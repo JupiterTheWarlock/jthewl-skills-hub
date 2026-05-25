@@ -2,6 +2,10 @@
 
 Public web hub for browsing [JupiterTheWarlock/jthewl-skills](https://github.com/JupiterTheWarlock/jthewl-skills), a Claude Code skills marketplace.
 
+## Design
+
+See [docs/product-design.md](docs/product-design.md) for the product, data, command, and plugin preview design.
+
 ## Development
 
 ```bash
