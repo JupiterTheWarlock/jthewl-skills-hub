@@ -29,6 +29,7 @@ const consensusProfilePath = path.resolve(
 const marketplacePath = path.join(skillsRoot, '.claude-plugin', 'marketplace.json')
 const hubMetadataRoot = path.join(skillsRoot, '.jthewl-hub', 'plugins')
 const outputPath = path.join(hubRoot, 'public', 'data', 'catalog.json')
+const optionalMode = process.argv.includes('--if-present')
 
 const TEXT_EXTENSIONS = new Set([
   '.css',
@@ -138,6 +139,18 @@ function componentInventory(tree) {
 }
 
 async function buildCatalog() {
+  if (optionalMode) {
+    const [hasMarketplace, hasOutput] = await Promise.all([
+      stat(marketplacePath).then(() => true, () => false),
+      stat(outputPath).then(() => true, () => false),
+    ])
+
+    if (!hasMarketplace && hasOutput) {
+      console.log('Sibling ../jthewl-skills not found; using committed public/data/catalog.json')
+      return
+    }
+  }
+
   const [marketplace, profile] = await Promise.all([readJson(marketplacePath), readJson(consensusProfilePath)])
 
   const plugins = await Promise.all(

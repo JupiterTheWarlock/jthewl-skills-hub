@@ -7,7 +7,7 @@
     "dev": "vite",
     "test": "node --test",
     "catalog": "node scripts/build-catalog.mjs",
-    "prebuild": "npm run catalog",
+    "prebuild": "node scripts/build-catalog.mjs --if-present",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
