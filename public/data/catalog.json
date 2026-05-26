@@ -1,0 +1,500 @@
+{
+  "generatedAt": "2026-05-26T02:35:01.895Z",
+  "source": {
+    "repository": "https://github.com/JupiterTheWarlock/jthewl-skills",
+    "marketplacePath": ".claude-plugin/marketplace.json"
+  },
+  "brand": {
+    "identity": {
+      "name": "术士木星",
+      "english_name": "JupiterTheWarlock",
+      "bio": "独立游戏开发者，热爱技术与创造",
+      "slogans": [
+        "AI Native的独立游戏开发者",
+        "AI 接管低维，人类专注高维"
+      ],
+      "avatar": ""
+    },
+    "avatar": {
+      "url": "https://cfr2cdn.jthewl.cc/头像.jpg",
+      "description": "个人头像，用于 favicon、StarsBoard icon 等"
+    },
+    "colorScheme": {
+      "name": "Claude Code Orange",
+      "accent": "#DA7756",
+      "accent_bright": "#E8985C",
+      "accent_dim": "#B85D3A",
+      "accent_glow": "rgba(218, 119, 86, 0.4)",
+      "bg_deep": "#0A0908",
+      "bg_card": "rgba(14, 12, 10, 0.85)",
+      "text_primary": "#E8E0D8",
+      "text_secondary": "#8A7E74",
+      "text_bright": "#FAF0E8",
+      "border": "#2E2520",
+      "border_light": "#4A3D33"
+    },
+    "social": {
+      "twitter": "https://x.com/JupiterTheWL",
+      "github": "https://github.com/JupiterTheWarlock",
+      "itchio": "https://jupiter-the-warlock.itch.io/",
+      "makerworld": "https://makerworld.com.cn/zh/@JtheWL",
+      "bilibili": "https://space.bilibili.com/76543088",
+      "zhihu": "https://www.zhihu.com/people/ying-ying-ying-ying-ying-hua-san-27",
+      "gcores": "https://www.gcores.com/users/744716"
+    }
+  },
+  "marketplace": {
+    "name": "jthewl-skills",
+    "description": "JupiterTheWarlock's public Claude Code skill plugins.",
+    "version": "0.1.0",
+    "owner": {
+      "name": "JupiterTheWarlock"
+    }
+  },
+  "commands": {
+    "marketplaceAdd": "/plugin marketplace add JupiterTheWarlock/jthewl-skills",
+    "cliMarketplaceAdd": "claude plugin marketplace add JupiterTheWarlock/jthewl-skills"
+  },
+  "plugins": [
+    {
+      "name": "git-sync",
+      "source": "plugins/git-sync",
+      "description": "Generic multi-repository Git synchronization workflow for main repos, submodules, and nested Git repos.",
+      "version": "0.1.0",
+      "author": {
+        "name": "JupiterTheWarlock"
+      },
+      "homepage": "https://github.com/JupiterTheWarlock/jthewl-skills",
+      "repository": "https://github.com/JupiterTheWarlock/jthewl-skills",
+      "license": "MIT",
+      "category": "Development",
+      "tags": [
+        "git",
+        "sync",
+        "submodules",
+        "repository",
+        "workflow",
+        "skill"
+      ],
+      "hub": {
+        "$schema": "../plugin.schema.json",
+        "name": "git-sync",
+        "hubDesc": "面向 meta-repo 的多仓库同步治理工具。它会把主仓库、git submodules、根目录独立 Git 仓库分层处理，适合一个 workspace 里混合管理多个项目的场景。",
+        "shortLabel": "Multi-repo sync",
+        "status": "stable",
+        "updatedAt": "2026-05-25",
+        "maintainer": {
+          "name": "JupiterTheWarlock",
+          "url": "https://github.com/JupiterTheWarlock"
+        },
+        "originalAuthor": {
+          "name": "JupiterTheWarlock",
+          "url": "https://github.com/JupiterTheWarlock"
+        },
+        "provenance": {
+          "type": "original",
+          "sourceName": "",
+          "sourceUrl": "",
+          "license": "MIT",
+          "notes": ""
+        },
+        "links": [
+          {
+            "label": "Repository",
+            "url": "https://github.com/JupiterTheWarlock/jthewl-skills"
+          }
+        ],
+        "useCases": [
+          "同步主仓库、submodules 和根目录独立 Git 仓库",
+          "为每个仓库保留独立 commit message",
+          "避免在 meta-repo 根目录误用无差别 git add"
+        ],
+        "warnings": [
+          "执行 live sync 前应确认当前工作区没有不想提交或推送的本地改动"
+        ],
+        "screenshots": []
+      },
+      "runtimeManifest": {
+        "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+        "name": "git-sync",
+        "description": "Generic multi-repository Git synchronization workflow for main repos, submodules, and nested Git repos.",
+        "version": "0.1.0",
+        "author": {
+          "name": "JupiterTheWarlock"
+        },
+        "homepage": "https://github.com/JupiterTheWarlock/jthewl-skills",
+        "repository": "https://github.com/JupiterTheWarlock/jthewl-skills",
+        "license": "MIT",
+        "keywords": [
+          "git",
+          "sync",
+          "submodules",
+          "repository",
+          "workflow",
+          "skill"
+        ]
+      },
+      "commands": {
+        "slashInstall": "/plugin install git-sync@jthewl-skills",
+        "cliInstall": "claude plugin install git-sync@jthewl-skills",
+        "sessionLoad": "claude --plugin-url https://jthewl.cc/plugins/git-sync.zip",
+        "localDev": "claude --plugin-dir ./plugins/git-sync"
+      },
+      "updatedAt": "2026-05-25",
+      "zipUrl": "https://jthewl.cc/plugins/git-sync.zip",
+      "githubUrl": "https://github.com/JupiterTheWarlock/jthewl-skills/tree/main/plugins/git-sync",
+      "fileTree": [
+        {
+          "path": ".claude-plugin",
+          "type": "directory"
+        },
+        {
+          "path": ".claude-plugin/plugin.json",
+          "type": "file",
+          "size": 538,
+          "extension": "json",
+          "isText": true,
+          "isLarge": false,
+          "rawUrl": "https://raw.githubusercontent.com/JupiterTheWarlock/jthewl-skills/main/plugins/git-sync/.claude-plugin/plugin.json",
+          "githubUrl": "https://github.com/JupiterTheWarlock/jthewl-skills/blob/main/plugins/git-sync/.claude-plugin/plugin.json"
+        },
+        {
+          "path": "skills",
+          "type": "directory"
+        },
+        {
+          "path": "skills/git-sync",
+          "type": "directory"
+        },
+        {
+          "path": "skills/git-sync/git-sync.sh",
+          "type": "file",
+          "size": 12325,
+          "extension": "sh",
+          "isText": true,
+          "isLarge": false,
+          "rawUrl": "https://raw.githubusercontent.com/JupiterTheWarlock/jthewl-skills/main/plugins/git-sync/skills/git-sync/git-sync.sh",
+          "githubUrl": "https://github.com/JupiterTheWarlock/jthewl-skills/blob/main/plugins/git-sync/skills/git-sync/git-sync.sh"
+        },
+        {
+          "path": "skills/git-sync/SKILL.md",
+          "type": "file",
+          "size": 3118,
+          "extension": "md",
+          "isText": true,
+          "isLarge": false,
+          "rawUrl": "https://raw.githubusercontent.com/JupiterTheWarlock/jthewl-skills/main/plugins/git-sync/skills/git-sync/SKILL.md",
+          "githubUrl": "https://github.com/JupiterTheWarlock/jthewl-skills/blob/main/plugins/git-sync/skills/git-sync/SKILL.md"
+        }
+      ],
+      "defaultPreview": "skills/git-sync/SKILL.md",
+      "previewContents": {
+        ".claude-plugin/plugin.json": "{\n  \"$schema\": \"https://json.schemastore.org/claude-code-plugin-manifest.json\",\n  \"name\": \"git-sync\",\n  \"description\": \"Generic multi-repository Git synchronization workflow for main repos, submodules, and nested Git repos.\",\n  \"version\": \"0.1.0\",\n  \"author\": {\n    \"name\": \"JupiterTheWarlock\"\n  },\n  \"homepage\": \"https://github.com/JupiterTheWarlock/jthewl-skills\",\n  \"repository\": \"https://github.com/JupiterTheWarlock/jthewl-skills\",\n  \"license\": \"MIT\",\n  \"keywords\": [\"git\", \"sync\", \"submodules\", \"repository\", \"workflow\", \"skill\"]\n}\n",
+        "skills/git-sync/git-sync.sh": "#!/usr/bin/env bash\n# Generic multi-repository Git sync helper.\n#\n# Usage:\n#   ./git-sync.sh\n#   ./git-sync.sh --continue-file /path/to/messages.tsv\n#   ./git-sync.sh --continue \"message shared by all changed repos\"\n#\n# Exit codes:\n#   0 - sync completed, or phase 1 found changes requiring commit messages\n#   1 - phase 1 found no changes after syncing clean repos, or usage/runtime error\n#   2 - conflict detected and manual resolution is required\n\nset -euo pipefail\n\nSCRIPT_DIR=\"$(cd \"$(dirname \"${BASH_SOURCE[0]}\")\" && pwd)\"\nMAIN_REPO=\"$(cd \"$SCRIPT_DIR/../../..\" && pwd)\"\nSTATE_KEY=\"$(printf '%s' \"$MAIN_REPO\" | cksum | awk '{print $1}')\"\nSTATE_DIR=\"${TMPDIR:-/tmp}/git-sync-$STATE_KEY\"\nSTATE_FILE=\"$STATE_DIR/state.tsv\"\nMESSAGE_TEMPLATE=\"$STATE_DIR/messages.template.tsv\"\n\nRED='\\033[0;31m'\nGREEN='\\033[0;32m'\nYELLOW='\\033[1;33m'\nBLUE='\\033[0;34m'\nNC='\\033[0m'\n\nmkdir -p \"$STATE_DIR\"\n\nsay() {\n    printf '%b\\n' \"$*\"\n}\n\nrepo_label() {\n    local repo=\"$1\"\n    if [[ \"$repo\" == \".\" ]]; then\n        printf '主仓库'\n    else\n        printf '%s' \"$repo\"\n    fi\n}\n\nrepo_path() {\n    local repo=\"$1\"\n    if [[ \"$repo\" == \".\" ]]; then\n        printf '%s' \"$MAIN_REPO\"\n    else\n        printf '%s/%s' \"$MAIN_REPO\" \"$repo\"\n    fi\n}\n\nis_git_repo() {\n    git -C \"$1\" rev-parse --is-inside-work-tree >/dev/null 2>&1\n}\n\nget_submodules() {\n    git -C \"$MAIN_REPO\" config --file .gitmodules --get-regexp '^submodule\\..*\\.path$' 2>/dev/null |\n        awk '{print $2}' || true\n}\n\nis_submodule_path() {\n    local candidate=\"$1\"\n    local submodule\n    while IFS= read -r submodule; do\n        [[ -z \"$submodule\" ]] && continue\n        if [[ \"$candidate\" == \"$submodule\" ]]; then\n            return 0\n        fi\n    done < <(get_submodules)\n    return 1\n}\n\nget_independent_repos() {\n    local child rel\n    while IFS= read -r child; do\n        [[ -z \"$child\" ]] && continue\n        rel=\"${child#$MAIN_REPO/}\"\n        [[ \"$rel\" == \".git\" || \"$rel\" == \".agents\" || \"$rel\" == \".Codex\" ]] && continue\n        is_submodule_path \"$rel\" && continue\n        [[ -e \"$child/.git\" ]] || continue\n        is_git_repo \"$child\" || continue\n        printf '%s\\n' \"$rel\"\n    done < <(find \"$MAIN_REPO\" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort)\n}\n\nget_repos() {\n    {\n        get_submodules\n        get_independent_repos\n        printf '.\\n'\n    } | awk 'NF && !seen[$0]++'\n}\n\nget_independent_pathspec_excludes() {\n    local repo\n    while IFS= read -r repo; do\n        [[ -z \"$repo\" ]] && continue\n        printf ':(exclude)%s\\n' \"$repo\"\n    done < <(get_independent_repos)\n}\n\ngit_add_all_for_repo() {\n    local repo=\"$1\"\n    local path\n    path=\"$(repo_path \"$repo\")\"\n\n    if [[ \"$repo\" != \".\" ]]; then\n        git -C \"$path\" add -A\n        return\n    fi\n\n    local pathspec=(\".\")\n    local exclude\n    while IFS= read -r exclude; do\n        [[ -n \"$exclude\" ]] && pathspec+=(\"$exclude\")\n    done < <(get_independent_pathspec_excludes)\n\n    git -C \"$path\" add -u -- \"${pathspec[@]}\"\n\n    local untracked=()\n    while IFS= read -r -d '' file; do\n        untracked+=(\"$file\")\n    done < <(git -C \"$path\" ls-files --others --exclude-standard -z -- \"${pathspec[@]}\")\n\n    if (( ${#untracked[@]} > 0 )); then\n        git -C \"$path\" add -- \"${untracked[@]}\"\n    fi\n}\n\nhas_conflicts() {\n    local path=\"$1\"\n    [[ -n \"$(git -C \"$path\" diff --name-only --diff-filter=U 2>/dev/null || true)\" ]]\n}\n\nprint_conflicts_and_exit() {\n    local repo=\"$1\"\n    local path\n    path=\"$(repo_path \"$repo\")\"\n\n    say \"${RED}[$(repo_label \"$repo\")] 检测到冲突。${NC}\"\n    say \"\"\n    say \"冲突文件:\"\n    git -C \"$path\" diff --name-only --diff-filter=U 2>/dev/null | sed 's/^/  - /'\n    say \"\"\n    say \"${RED}退出码: 2 (有冲突)${NC}\"\n    say \"解决冲突后在对应仓库内执行:\"\n    say \"  git add <冲突文件>\"\n    say \"  git rebase --continue\"\n    say \"  git push\"\n    exit 2\n}\n\ncurrent_branch() {\n    git -C \"$1\" branch --show-current 2>/dev/null || true\n}\n\nhas_origin() {\n    git -C \"$1\" remote get-url origin >/dev/null 2>&1\n}\n\nsync_clean_or_committed_repo() {\n    local repo=\"$1\"\n    local path branch upstream\n    path=\"$(repo_path \"$repo\")\"\n    branch=\"$(current_branch \"$path\")\"\n\n    if ! has_origin \"$path\"; then\n        say \"${YELLOW}[$(repo_label \"$repo\")] 没有 origin，跳过远端同步。${NC}\"\n        return 0\n    fi\n\n    git -C \"$path\" fetch origin --prune\n\n    if [[ -z \"$branch\" ]]; then\n        say \"${YELLOW}[$(repo_label \"$repo\")] 当前是 detached HEAD，已 fetch，跳过 pull/push。${NC}\"\n        return 0\n    fi\n\n    upstream=\"$(git -C \"$path\" rev-parse --abbrev-ref --symbolic-full-name '@{u}' 2>/dev/null || true)\"\n    if [[ -n \"$upstream\" ]]; then\n        git -C \"$path\" pull --rebase --autostash\n    else\n        git -C \"$path\" pull --rebase --autostash origin \"$branch\"\n    fi\n\n    if has_conflicts \"$path\"; then\n        print_conflicts_and_exit \"$repo\"\n    fi\n\n    git -C \"$path\" push origin \"$branch\"\n}\n\nrepo_status_porcelain() {\n    local repo=\"$1\"\n    local path\n    path=\"$(repo_path \"$repo\")\"\n\n    if [[ \"$repo\" != \".\" ]]; then\n        git -C \"$path\" status --porcelain\n        return\n    fi\n\n    local pathspec=(\".\")\n    local exclude\n    while IFS= read -r exclude; do\n        [[ -n \"$exclude\" ]] && pathspec+=(\"$exclude\")\n    done < <(get_independent_pathspec_excludes)\n    git -C \"$path\" status --porcelain -- \"${pathspec[@]}\"\n}\n\nrepo_has_changes() {\n    [[ -n \"$(repo_status_porcelain \"$1\")\" ]]\n}\n\nprint_change_summary() {\n    local repo=\"$1\"\n    local path\n    path=\"$(repo_path \"$repo\")\"\n\n    say \"  状态:\"\n    repo_status_porcelain \"$repo\" | sed 's/^/    /' | head -40\n\n    say \"  改动摘要:\"\n    git -C \"$path\" diff --stat 2>/dev/null | sed 's/^/    /' | head -20 || true\n    git -C \"$path\" diff --cached --stat 2>/dev/null | sed 's/^/    /' | head -20 || true\n    say \"\"\n}\n\ncleanup_state() {\n    rm -f \"$STATE_FILE\" \"$MESSAGE_TEMPLATE\"\n}\n\nphase1_check() {\n    cleanup_state\n    : > \"$STATE_FILE\"\n    : > \"$MESSAGE_TEMPLATE\"\n\n    say \"${BLUE}========================================${NC}\"\n    say \"${BLUE}Git 同步 - 阶段1：发现仓库并检查状态${NC}\"\n    say \"${BLUE}========================================${NC}\"\n    say \"\"\n\n    local has_changes=0\n    local repo path\n\n    while IFS= read -r repo; do\n        [[ -z \"$repo\" ]] && continue\n        path=\"$(repo_path \"$repo\")\"\n        [[ -d \"$path\" ]] || continue\n        is_git_repo \"$path\" || continue\n\n        say \"${BLUE}[$(repo_label \"$repo\")]${NC}\"\n        git -C \"$path\" fetch origin --prune 2>/dev/null || true\n\n        if repo_has_changes \"$repo\"; then\n            has_changes=1\n            printf '%s\\t%s\\n' \"$repo\" \"$path\" >> \"$STATE_FILE\"\n            printf '%s\\t%s\\n' \"$repo\" \"\" >> \"$MESSAGE_TEMPLATE\"\n            say \"${GREEN}  需要提交。${NC}\"\n            print_change_summary \"$repo\"\n        else\n            say \"${YELLOW}  无本地改动，尝试和远端对齐。${NC}\"\n            if sync_clean_or_committed_repo \"$repo\"; then\n                say \"${GREEN}  同步完成。${NC}\"\n            fi\n            say \"\"\n        fi\n    done < <(get_repos)\n\n    say \"${BLUE}========================================${NC}\"\n\n    if [[ \"$has_changes\" -eq 1 ]]; then\n        say \"${GREEN}检测到需要提交的仓库。${NC}\"\n        say \"请为每个仓库分别填写提交信息:\"\n        say \"  $MESSAGE_TEMPLATE\"\n        say \"\"\n        say \"格式: repo<TAB>commit message\"\n        say \"继续执行:\"\n        say \"  $0 --continue-file \\\"$MESSAGE_TEMPLATE\\\"\"\n        say \"\"\n        say \"退出码: 0 (需要 commit message)\"\n        exit 0\n    fi\n\n    say \"${GREEN}同步完成，无本地改动。${NC}\"\n    say \"退出码: 1 (无需 commit)\"\n    cleanup_state\n    exit 1\n}\n\nmessage_for_repo() {\n    local repo=\"$1\"\n    local message_file=\"$2\"\n    awk -F '\\t' -v repo=\"$repo\" '$1 == repo { sub(/^[^\\t]*\\t/, \"\"); print; found=1; exit } END { if (!found) exit 1 }' \"$message_file\"\n}\n\nphase2_continue_file() {\n    local message_file=\"$1\"\n    local repo path message\n\n    if [[ ! -f \"$STATE_FILE\" ]]; then\n        say \"${RED}错误: 找不到状态文件，请先运行阶段1。${NC}\"\n        exit 1\n    fi\n    if [[ ! -f \"$message_file\" ]]; then\n        say \"${RED}错误: 找不到提交信息文件: $message_file${NC}\"\n        exit 1\n    fi\n\n    say \"${BLUE}========================================${NC}\"\n    say \"${BLUE}Git 同步 - 阶段2：逐仓库提交并同步${NC}\"\n    say \"${BLUE}========================================${NC}\"\n    say \"\"\n\n    while IFS=$'\\t' read -r repo path; do\n        [[ -z \"$repo\" ]] && continue\n        [[ -d \"$path\" ]] || continue\n        is_git_repo \"$path\" || continue\n\n        message=\"$(message_for_repo \"$repo\" \"$message_file\" || true)\"\n        if [[ -z \"$message\" ]]; then\n            say \"${RED}[$(repo_label \"$repo\")] 缺少提交信息。${NC}\"\n            say \"请在 $message_file 中填写 repo<TAB>commit message。\"\n            exit 1\n        fi\n\n        say \"${YELLOW}[$(repo_label \"$repo\")] 暂存并提交。${NC}\"\n        git_add_all_for_repo \"$repo\"\n\n        if git -C \"$path\" diff --cached --quiet; then\n            say \"${YELLOW}[$(repo_label \"$repo\")] 暂存区无改动，跳过 commit。${NC}\"\n        else\n            git -C \"$path\" commit -m \"$message\"\n        fi\n\n        say \"${YELLOW}[$(repo_label \"$repo\")] 拉取并推送。${NC}\"\n        if ! sync_clean_or_committed_repo \"$repo\"; then\n            if has_conflicts \"$path\"; then\n                print_conflicts_and_exit \"$repo\"\n            fi\n            exit 1\n        fi\n\n        say \"${GREEN}[$(repo_label \"$repo\")] 同步完成。${NC}\"\n        say \"\"\n    done < \"$STATE_FILE\"\n\n    say \"${BLUE}========================================${NC}\"\n    say \"${GREEN}全部同步完成。${NC}\"\n    cleanup_state\n    exit 0\n}\n\nphase2_continue_shared_message() {\n    local message=\"$1\"\n    local shared_file=\"$STATE_DIR/messages.shared.tsv\"\n\n    if [[ -z \"$message\" ]]; then\n        say \"${RED}错误: 缺少 commit message。${NC}\"\n        exit 1\n    fi\n    if [[ ! -f \"$STATE_FILE\" ]]; then\n        say \"${RED}错误: 找不到状态文件，请先运行阶段1。${NC}\"\n        exit 1\n    fi\n\n    while IFS=$'\\t' read -r repo _path; do\n        [[ -n \"$repo\" ]] && printf '%s\\t%s\\n' \"$repo\" \"$message\"\n    done < \"$STATE_FILE\" > \"$shared_file\"\n\n    phase2_continue_file \"$shared_file\"\n}\n\nshow_help() {\n    cat <<EOF\nGit 同步脚本 - 通用多仓库两阶段模式\n\n用法:\n  $0\n      阶段1：发现子模块、根目录下独立仓库和主仓库，检查状态并同步干净仓库\n\n  $0 --status-only\n      只读检查：发现仓库并输出当前状态，不 fetch、不 pull、不 push\n\n  $0 --continue-file <messages.tsv>\n      阶段2：按 repo<TAB>commit message 文件逐仓库提交、rebase、push\n\n  $0 --continue \"message\"\n      兼容旧用法：所有需要提交的仓库共用同一条提交信息，不建议日常使用\n\n退出码:\n  0 - 阶段1发现需要提交的改动，或阶段2同步完成\n  1 - 阶段1无改动，或运行错误\n  2 - 检测到冲突，需要手动解决\nEOF\n}\n\nstatus_only() {\n    local repo path\n\n    say \"${BLUE}========================================${NC}\"\n    say \"${BLUE}Git 同步 - 只读状态检查${NC}\"\n    say \"${BLUE}========================================${NC}\"\n    say \"\"\n\n    while IFS= read -r repo; do\n        [[ -z \"$repo\" ]] && continue\n        path=\"$(repo_path \"$repo\")\"\n        [[ -d \"$path\" ]] || continue\n        is_git_repo \"$path\" || continue\n\n        say \"${BLUE}[$(repo_label \"$repo\")]${NC} $path\"\n        if repo_has_changes \"$repo\"; then\n            say \"${GREEN}  有本地改动。${NC}\"\n            repo_status_porcelain \"$repo\" | sed 's/^/    /' | head -40\n        else\n            say \"${YELLOW}  无本地改动。${NC}\"\n        fi\n        say \"\"\n    done < <(get_repos)\n}\n\nmain() {\n    cd \"$MAIN_REPO\"\n\n    case \"${1:-}\" in\n        \"\")\n            phase1_check\n            ;;\n        --status-only)\n            status_only\n            ;;\n        --continue-file)\n            phase2_continue_file \"${2:-}\"\n            ;;\n        --continue)\n            phase2_continue_shared_message \"${2:-}\"\n            ;;\n        --help|-h)\n            show_help\n            ;;\n        *)\n            say \"${RED}未知参数: $1${NC}\"\n            show_help\n            exit 1\n            ;;\n    esac\n}\n\nmain \"$@\"\n",
+        "skills/git-sync/SKILL.md": "---\nname: git-sync\ndescription: 通用 Git 仓库同步治理 skill，用于让当前仓库、其子模块、以及当前仓库目录下的独立 Git 仓库尽可能与远端对齐。适用于 /git-sync、同步仓库、同步子模块、提交并推送、处理 Git 冲突等请求。\n---\n\n# Git Sync\n\n## 核心目标\n\n一次 `/git-sync` 尽可能完成三类仓库的拉取、提交和推送，让本地与远端基本对齐：\n\n- 当前主仓库\n- 当前主仓库声明的 git submodules\n- 当前主仓库根目录下的独立 Git 仓库\n\n这是通用 skill，不包含任何项目特化逻辑、白名单逻辑或硬编码仓库名。\n\n## 工作模型\n\n脚本采用两阶段模式：\n\n1. 阶段 1：发现仓库、fetch 远端、检查本地改动；没有本地改动的仓库会尝试 `pull --rebase --autostash` 和 `push`。\n2. 阶段 2：AI 根据阶段 1 输出，为每个有改动的仓库分别写 commit message；脚本逐仓库 `add`、`commit`、`pull --rebase --autostash`、`push`。\n\n阶段 1 不会自动暂存文件。阶段 2 才会暂存并提交。\n\n## 标准流程\n\n### 1. 执行阶段 1\n\n```bash\n.agents/skills/git-sync/git-sync.sh\n```\n\n退出码含义：\n\n| 退出码 | 含义 | 下一步 |\n|---|---|---|\n| 0 | 有仓库需要提交 | 阅读每个仓库的状态和摘要，填写提交信息文件 |\n| 1 | 无本地改动，已尽量同步 | 直接向用户汇报结果 |\n| 2 | 检测到冲突 | 停止自动流程，手动解决冲突 |\n\n如只需要检查发现逻辑或当前状态，不希望触发远端同步，可使用：\n\n```bash\n.agents/skills/git-sync/git-sync.sh --status-only\n```\n\n### 2. 为每个仓库分别写提交信息\n\n阶段 1 会输出一个 `messages.template.tsv` 路径。格式固定为：\n\n```text\nrepo<TAB>commit message\n```\n\n示例：\n\n```text\ngithub-readme\t更新 GitHub 主页内容\npersonal-website\t调整个人网站展示信息\n.\t更新子模块引用\n```\n\n要求：\n\n- 每个仓库单独写提交信息，不要把所有仓库共用同一句。\n- 使用中文。\n- 简洁说明本仓库做了什么。\n- 不添加 `Co-Authored-By:`。\n\n### 3. 执行阶段 2\n\n```bash\n.agents/skills/git-sync/git-sync.sh --continue-file \"<messages.template.tsv 路径>\"\n```\n\n旧用法仍可用，但只用于临时兼容，不作为默认流程：\n\n```bash\n.agents/skills/git-sync/git-sync.sh --continue \"所有仓库共用的提交信息\"\n```\n\n## 冲突处理\n\n脚本检测到冲突时会输出冲突文件列表并返回退出码 2。此时不要继续自动提交。\n\n处理方式：\n\n```bash\ngit diff --name-only --diff-filter=U\ngit add <冲突文件>\ngit rebase --continue\ngit push\n```\n\n如果多个仓库发生冲突，先处理脚本当前提示的仓库，再重新运行 `/git-sync`。\n\n## 安全约束\n\n禁止在此 skill 中执行：\n\n- `git reset --hard`\n- `git push --force`\n- `git clean -fd`\n- `git checkout --theirs`\n- `git checkout --ours`\n\n主仓库根目录下的独立 Git 仓库会被当作独立仓库处理，不会被主仓库 `git add -A` 收进去。\n\n## 附属文件\n\n| 文件 | 说明 |\n|---|---|\n| `git-sync.sh` | 通用多仓库同步脚本 |\n"
+      },
+      "inventory": {
+        "manifests": 1,
+        "skills": 1,
+        "scripts": 0,
+        "files": 3
+      }
+    },
+    {
+      "name": "project-skill-governance",
+      "source": "plugins/project-skill-governance",
+      "description": "Consolidate repo-local agent skills into .agents/skills and maintain compatibility router skills across agent ecosystems.",
+      "version": "0.1.0",
+      "author": {
+        "name": "JupiterTheWarlock"
+      },
+      "homepage": "https://github.com/JupiterTheWarlock/jthewl-skills",
+      "repository": "https://github.com/JupiterTheWarlock/jthewl-skills",
+      "license": "MIT",
+      "category": "Development",
+      "tags": [
+        "skills",
+        "agents",
+        "governance",
+        "migration",
+        "codex",
+        "claude-code"
+      ],
+      "hub": {
+        "$schema": "../plugin.schema.json",
+        "name": "project-skill-governance",
+        "hubDesc": "用于治理项目内多套 agent skill 目录的迁移工具。它把 .agents/skills 作为 canonical source，同时把 .claude、.cursor、.codex 等目录改造成兼容入口。",
+        "shortLabel": "Skill governance",
+        "status": "stable",
+        "updatedAt": "2026-05-25",
+        "maintainer": {
+          "name": "JupiterTheWarlock",
+          "url": "https://github.com/JupiterTheWarlock"
+        },
+        "originalAuthor": {
+          "name": "JupiterTheWarlock",
+          "url": "https://github.com/JupiterTheWarlock"
+        },
+        "provenance": {
+          "type": "original",
+          "sourceName": "",
+          "sourceUrl": "",
+          "license": "MIT",
+          "notes": ""
+        },
+        "links": [
+          {
+            "label": "Repository",
+            "url": "https://github.com/JupiterTheWarlock/jthewl-skills"
+          }
+        ],
+        "useCases": [
+          "合并项目内重复或分散的 agent skills",
+          "维护 .agents/skills canonical source",
+          "为不同 agent 生态生成兼容 router skill"
+        ],
+        "warnings": [
+          "运行前应检查项目里是否存在同名但内容不同的 skill，冲突需要人工判断"
+        ],
+        "screenshots": []
+      },
+      "runtimeManifest": {
+        "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+        "name": "project-skill-governance",
+        "description": "Consolidate repo-local agent skills into .agents/skills and maintain compatibility router skills across agent ecosystems.",
+        "version": "0.1.0",
+        "author": {
+          "name": "JupiterTheWarlock"
+        },
+        "homepage": "https://github.com/JupiterTheWarlock/jthewl-skills",
+        "repository": "https://github.com/JupiterTheWarlock/jthewl-skills",
+        "license": "MIT",
+        "keywords": [
+          "skills",
+          "agents",
+          "governance",
+          "migration",
+          "codex",
+          "claude-code"
+        ]
+      },
+      "commands": {
+        "slashInstall": "/plugin install project-skill-governance@jthewl-skills",
+        "cliInstall": "claude plugin install project-skill-governance@jthewl-skills",
+        "sessionLoad": "claude --plugin-url https://jthewl.cc/plugins/project-skill-governance.zip",
+        "localDev": "claude --plugin-dir ./plugins/project-skill-governance"
+      },
+      "updatedAt": "2026-05-25",
+      "zipUrl": "https://jthewl.cc/plugins/project-skill-governance.zip",
+      "githubUrl": "https://github.com/JupiterTheWarlock/jthewl-skills/tree/main/plugins/project-skill-governance",
+      "fileTree": [
+        {
+          "path": ".claude-plugin",
+          "type": "directory"
+        },
+        {
+          "path": ".claude-plugin/plugin.json",
+          "type": "file",
+          "size": 579,
+          "extension": "json",
+          "isText": true,
+          "isLarge": false,
+          "rawUrl": "https://raw.githubusercontent.com/JupiterTheWarlock/jthewl-skills/main/plugins/project-skill-governance/.claude-plugin/plugin.json",
+          "githubUrl": "https://github.com/JupiterTheWarlock/jthewl-skills/blob/main/plugins/project-skill-governance/.claude-plugin/plugin.json"
+        },
+        {
+          "path": "skills",
+          "type": "directory"
+        },
+        {
+          "path": "skills/project-skill-governance",
+          "type": "directory"
+        },
+        {
+          "path": "skills/project-skill-governance/scripts",
+          "type": "directory"
+        },
+        {
+          "path": "skills/project-skill-governance/scripts/govern-project-skills.ps1",
+          "type": "file",
+          "size": 10429,
+          "extension": "ps1",
+          "isText": true,
+          "isLarge": false,
+          "rawUrl": "https://raw.githubusercontent.com/JupiterTheWarlock/jthewl-skills/main/plugins/project-skill-governance/skills/project-skill-governance/scripts/govern-project-skills.ps1",
+          "githubUrl": "https://github.com/JupiterTheWarlock/jthewl-skills/blob/main/plugins/project-skill-governance/skills/project-skill-governance/scripts/govern-project-skills.ps1"
+        },
+        {
+          "path": "skills/project-skill-governance/SKILL.md",
+          "type": "file",
+          "size": 3149,
+          "extension": "md",
+          "isText": true,
+          "isLarge": false,
+          "rawUrl": "https://raw.githubusercontent.com/JupiterTheWarlock/jthewl-skills/main/plugins/project-skill-governance/skills/project-skill-governance/SKILL.md",
+          "githubUrl": "https://github.com/JupiterTheWarlock/jthewl-skills/blob/main/plugins/project-skill-governance/skills/project-skill-governance/SKILL.md"
+        }
+      ],
+      "defaultPreview": "skills/project-skill-governance/SKILL.md",
+      "previewContents": {
+        ".claude-plugin/plugin.json": "{\n  \"$schema\": \"https://json.schemastore.org/claude-code-plugin-manifest.json\",\n  \"name\": \"project-skill-governance\",\n  \"description\": \"Consolidate repo-local agent skills into .agents/skills and maintain compatibility router skills across agent ecosystems.\",\n  \"version\": \"0.1.0\",\n  \"author\": {\n    \"name\": \"JupiterTheWarlock\"\n  },\n  \"homepage\": \"https://github.com/JupiterTheWarlock/jthewl-skills\",\n  \"repository\": \"https://github.com/JupiterTheWarlock/jthewl-skills\",\n  \"license\": \"MIT\",\n  \"keywords\": [\"skills\", \"agents\", \"governance\", \"migration\", \"codex\", \"claude-code\"]\n}\n",
+        "skills/project-skill-governance/scripts/govern-project-skills.ps1": "param(\n    [string]$Root,\n    [switch]$CreateMissingAgentDirs,\n    [switch]$VerifyOnly,\n    [switch]$WhatIf\n)\n\nSet-StrictMode -Version Latest\n$ErrorActionPreference = \"Stop\"\n\nfunction Get-RepoRoot {\n    if ($Root) {\n        return (Resolve-Path -LiteralPath $Root).Path\n    }\n\n    $candidate = Resolve-Path -LiteralPath (Join-Path $PSScriptRoot \"..\\..\\..\\..\")\n    return $candidate.Path\n}\n\nfunction Get-RelativePath {\n    param(\n        [Parameter(Mandatory = $true)][string]$FromDirectory,\n        [Parameter(Mandatory = $true)][string]$ToPath\n    )\n\n    if (Test-Path -LiteralPath $FromDirectory) {\n        $resolvedFrom = (Resolve-Path -LiteralPath $FromDirectory).Path\n    } else {\n        $resolvedFrom = [System.IO.Path]::GetFullPath($FromDirectory)\n    }\n    $fromUri = [Uri]($resolvedFrom.TrimEnd('\\') + '\\')\n    if (Test-Path -LiteralPath $ToPath) {\n        $resolvedTo = (Resolve-Path -LiteralPath $ToPath).Path\n    } else {\n        $resolvedTo = [System.IO.Path]::GetFullPath($ToPath)\n    }\n    $toUri = [Uri]$resolvedTo\n    return [Uri]::UnescapeDataString($fromUri.MakeRelativeUri($toUri).ToString()).Replace('/', '\\')\n}\n\nfunction Get-DirectoryHash {\n    param([Parameter(Mandatory = $true)][string]$Path)\n\n    if (-not (Test-Path -LiteralPath $Path)) {\n        return \"\"\n    }\n\n    $files = Get-ChildItem -LiteralPath $Path -Recurse -File -Force |\n        Where-Object {\n            $_.FullName -notmatch '\\\\node_modules\\\\' -and\n            $_.Name -ne '.env'\n        } |\n        Sort-Object FullName\n\n    $sha = [System.Security.Cryptography.SHA256]::Create()\n    $builder = [System.Text.StringBuilder]::new()\n\n    foreach ($file in $files) {\n        $relative = Get-RelativePath -FromDirectory $Path -ToPath $file.FullName\n        $bytes = [System.IO.File]::ReadAllBytes($file.FullName)\n        $hash = [BitConverter]::ToString($sha.ComputeHash($bytes)).Replace(\"-\", \"\")\n        [void]$builder.AppendLine(\"$relative=$hash\")\n    }\n\n    $summaryBytes = [System.Text.Encoding]::UTF8.GetBytes($builder.ToString())\n    return [BitConverter]::ToString($sha.ComputeHash($summaryBytes)).Replace(\"-\", \"\")\n}\n\nfunction Copy-SkillToCanonical {\n    param(\n        [Parameter(Mandatory = $true)][string]$SourceSkill,\n        [Parameter(Mandatory = $true)][string]$DestinationSkill\n    )\n\n    if ($WhatIf) {\n        Write-Host \"[whatif] Copy $SourceSkill -> $DestinationSkill\"\n        return\n    }\n\n    Copy-Item -LiteralPath $SourceSkill -Destination $DestinationSkill -Recurse -Force\n    Write-Host \"[copy] $SourceSkill -> $DestinationSkill\"\n}\n\nfunction Read-Utf8Text {\n    param([Parameter(Mandatory = $true)][string]$Path)\n\n    $text = [System.IO.File]::ReadAllText($Path, [System.Text.UTF8Encoding]::new($false))\n    return $text.TrimStart([char]0xFEFF)\n}\n\nfunction Get-SkillFrontmatterBlock {\n    param([Parameter(Mandatory = $true)][string]$SkillFile)\n\n    $content = Read-Utf8Text -Path $SkillFile\n    $match = [regex]::Match($content, \"(?s)\\A---\\r?\\n.*?\\r?\\n---\")\n    if (-not $match.Success) {\n        throw \"Missing YAML frontmatter in $SkillFile\"\n    }\n    return $match.Value\n}\n\nfunction Normalize-Newlines {\n    param([Parameter(Mandatory = $true)][string]$Text)\n\n    return $Text.Replace(\"`r`n\", \"`n\")\n}\n\nfunction Test-RouterSkill {\n    param(\n        [Parameter(Mandatory = $true)][string]$SourceSkill,\n        [Parameter(Mandatory = $true)][string]$CanonicalSkillDir\n    )\n\n    $skillFile = Join-Path $SourceSkill \"SKILL.md\"\n    if (-not (Test-Path -LiteralPath $skillFile)) {\n        return $false\n    }\n\n    $canonicalSkillFile = Join-Path $CanonicalSkillDir \"SKILL.md\"\n    $expectedRelative = Get-RelativePath -FromDirectory $SourceSkill -ToPath $CanonicalSkillDir\n    $content = Read-Utf8Text -Path $skillFile\n    $sourceFrontmatter = Get-SkillFrontmatterBlock -SkillFile $skillFile\n    $canonicalFrontmatter = Get-SkillFrontmatterBlock -SkillFile $canonicalSkillFile\n    return $content.Contains(\"compatibility router\") -and\n        $content.Contains($expectedRelative) -and\n        ((Normalize-Newlines -Text $sourceFrontmatter) -eq (Normalize-Newlines -Text $canonicalFrontmatter))\n}\n\nfunction Test-RouterDirectory {\n    param(\n        [Parameter(Mandatory = $true)][string]$SkillsDir,\n        [Parameter(Mandatory = $true)][object[]]$CanonicalSkillDirs\n    )\n\n    $failures = 0\n    foreach ($canonical in $CanonicalSkillDirs) {\n        $routerDir = Join-Path $SkillsDir $canonical.Name\n        $routerSkillFile = Join-Path $routerDir \"SKILL.md\"\n        $canonicalSkillFile = Join-Path $canonical.FullName \"SKILL.md\"\n        $expectedRelative = Get-RelativePath -FromDirectory $routerDir -ToPath $canonical.FullName\n\n        if (-not (Test-Path -LiteralPath $routerSkillFile)) {\n            Write-Host \"[missing] $routerSkillFile\"\n            $failures += 1\n            continue\n        }\n\n        $resolvedTarget = [System.IO.Path]::GetFullPath((Join-Path $routerDir $expectedRelative))\n        $actualTarget = (Resolve-Path -LiteralPath $canonical.FullName).Path\n        if ($resolvedTarget -ne $actualTarget) {\n            Write-Host \"[bad-path] $routerSkillFile -> $expectedRelative resolves to $resolvedTarget\"\n            $failures += 1\n            continue\n        }\n\n        if (-not (Test-RouterSkill -SourceSkill $routerDir -CanonicalSkillDir $canonical.FullName)) {\n            Write-Host \"[bad-router] $routerSkillFile\"\n            $failures += 1\n            continue\n        }\n\n        Write-Host \"[ok] $routerSkillFile -> $expectedRelative\"\n    }\n\n    return $failures\n}\n\nfunction Write-RouterSkill {\n    param(\n        [Parameter(Mandatory = $true)][string]$SkillDir,\n        [Parameter(Mandatory = $true)][string]$SkillName,\n        [Parameter(Mandatory = $true)][string]$CanonicalSkillDir\n    )\n\n    $canonicalSkillFile = Join-Path $CanonicalSkillDir \"SKILL.md\"\n    $relative = Get-RelativePath -FromDirectory $SkillDir -ToPath $CanonicalSkillDir\n    $canonicalFrontmatter = Get-SkillFrontmatterBlock -SkillFile $canonicalSkillFile\n    $content = @\"\n$canonicalFrontmatter\n\n# $SkillName Router\n\nThis is a compatibility router. The canonical project skill folder is:\n\nCanonical path: $relative\n\nResolve that path relative to this file, read `SKILL.md` inside that canonical folder, and follow the canonical instructions. Treat bundled resources in that folder as part of the skill. Do not treat this router as the source of truth.\n\"@\n\n    if ($WhatIf) {\n        Write-Host \"[whatif] Rewrite router $SkillDir -> $relative\"\n        return\n    }\n\n    if (Test-Path -LiteralPath $SkillDir) {\n        Remove-Item -LiteralPath $SkillDir -Recurse -Force\n    }\n    New-Item -ItemType Directory -Path $SkillDir -Force | Out-Null\n    $skillFile = Join-Path $SkillDir \"SKILL.md\"\n    [System.IO.File]::WriteAllText($skillFile, $content, [System.Text.UTF8Encoding]::new($false))\n    Write-Host \"[route] $SkillDir -> $relative\"\n}\n\n$repoRoot = Get-RepoRoot\n$canonicalSkills = Join-Path $repoRoot \".agents\\skills\"\n$agentConfigDirs = @(\".claude\", \".cursor\", \".qoder\", \".codex\", \".opencode\", \".openclaw\")\n\nif (-not (Test-Path -LiteralPath $canonicalSkills)) {\n    if ($WhatIf) {\n        Write-Host \"[whatif] Create $canonicalSkills\"\n    } else {\n        New-Item -ItemType Directory -Path $canonicalSkills -Force | Out-Null\n    }\n}\n\n$sourceSkills = @()\nforeach ($agentDirName in @(\".agents\") + $agentConfigDirs) {\n    $agentDir = Join-Path $repoRoot $agentDirName\n    $skillsDir = Join-Path $agentDir \"skills\"\n\n    if (-not (Test-Path -LiteralPath $skillsDir)) {\n        if ($CreateMissingAgentDirs -and $agentDirName -ne \".agents\") {\n            if ($WhatIf) {\n                Write-Host \"[whatif] Create $skillsDir\"\n            } else {\n                New-Item -ItemType Directory -Path $skillsDir -Force | Out-Null\n            }\n        }\n        continue\n    }\n\n    $sourceSkills += Get-ChildItem -LiteralPath $skillsDir -Directory -Force | ForEach-Object {\n        [pscustomobject]@{\n            AgentDir = $agentDirName\n            Name = $_.Name\n            Path = $_.FullName\n        }\n    }\n}\n\n$canonicalSkillDirs = Get-ChildItem -LiteralPath $canonicalSkills -Directory -Force | Sort-Object Name\n\nif ($VerifyOnly) {\n    $totalFailures = 0\n    foreach ($agentDirName in $agentConfigDirs) {\n        $skillsDir = Join-Path (Join-Path $repoRoot $agentDirName) \"skills\"\n        if (-not (Test-Path -LiteralPath $skillsDir)) {\n            Write-Host \"[skip] $agentDirName has no skills directory\"\n            continue\n        }\n        $totalFailures += Test-RouterDirectory -SkillsDir $skillsDir -CanonicalSkillDirs $canonicalSkillDirs\n    }\n    if ($totalFailures -gt 0) {\n        throw \"Router verification failed with $totalFailures issue(s).\"\n    }\n    Write-Host \"[done] router verification passed\"\n    exit 0\n}\n\nforeach ($skill in $sourceSkills | Where-Object { $_.AgentDir -ne \".agents\" }) {\n    $target = Join-Path $canonicalSkills $skill.Name\n    if (-not (Test-Path -LiteralPath $target)) {\n        Copy-SkillToCanonical -SourceSkill $skill.Path -DestinationSkill $target\n        continue\n    }\n\n    if (Test-RouterSkill -SourceSkill $skill.Path -CanonicalSkillDir $target) {\n        Write-Host \"[router] $($skill.AgentDir)/skills/$($skill.Name)\"\n        continue\n    }\n\n    $sourceHash = Get-DirectoryHash -Path $skill.Path\n    $targetHash = Get-DirectoryHash -Path $target\n    if ($sourceHash -eq $targetHash) {\n        Write-Host \"[same] $($skill.AgentDir)/skills/$($skill.Name)\"\n    } else {\n        Write-Host \"[conflict] $($skill.AgentDir)/skills/$($skill.Name) differs from .agents/skills/$($skill.Name); kept canonical\"\n    }\n}\n\nforeach ($agentDirName in $agentConfigDirs) {\n    $agentDir = Join-Path $repoRoot $agentDirName\n    $skillsDir = Join-Path $agentDir \"skills\"\n\n    if (-not (Test-Path -LiteralPath $skillsDir)) {\n        if ($CreateMissingAgentDirs) {\n            if ($WhatIf) {\n                Write-Host \"[whatif] Create $skillsDir\"\n            } else {\n                New-Item -ItemType Directory -Path $skillsDir -Force | Out-Null\n            }\n        } else {\n            Write-Host \"[skip] $agentDirName has no skills directory\"\n            continue\n        }\n    }\n\n    foreach ($canonical in $canonicalSkillDirs) {\n        $routerDir = Join-Path $skillsDir $canonical.Name\n        Write-RouterSkill -SkillDir $routerDir -SkillName $canonical.Name -CanonicalSkillDir $canonical.FullName\n    }\n}\n\nWrite-Host \"[done] canonical skills: $($canonicalSkillDirs.Count)\"\n",
+        "skills/project-skill-governance/SKILL.md": "---\nname: project-skill-governance\ndescription: Govern repo-local agent skills by consolidating skills from .claude, .cursor, .qoder, .codex, and other agent config folders into .agents/skills as the canonical union, then rewriting per-agent skill folders as compatibility routers to the matching .agents/skills entry. Use when syncing, deduplicating, migrating, or repairing project-local skills across multiple agent ecosystems.\n---\n\n# Project Skill Governance\n\n## Overview\n\nUse this skill to keep `.agents/skills` as the project-local source of truth for skills while preserving compatibility with agent-specific folders such as `.claude/skills`.\n\n## Workflow\n\n1. Inspect project-local agent config folders: `.agents`, `.claude`, `.cursor`, `.qoder`, `.codex`, `.opencode`, and `.openclaw`.\n2. Treat `.agents/skills` as canonical.\n3. Copy any skill that exists only in another agent config folder into `.agents/skills`.\n4. Do not overwrite an existing canonical skill with same-name content from another agent folder. Report the conflict and keep `.agents/skills` authoritative.\n5. Rewrite every existing non-canonical agent `skills/<skill-name>` folder into a generated router skill that points to the corresponding canonical `.agents/skills/<skill-name>` folder.\n6. Copy router frontmatter directly from the canonical `.agents/skills/<skill-name>/SKILL.md`; only the router body is generated.\n7. Validate the canonical skill folders and router paths after changes.\n\n## Commands\n\nPreview without writing:\n\n```powershell\npowershell -ExecutionPolicy Bypass -File .agents/skills/project-skill-governance/scripts/govern-project-skills.ps1 -WhatIf\n```\n\nApply the governance pass:\n\n```powershell\npowershell -ExecutionPolicy Bypass -File .agents/skills/project-skill-governance/scripts/govern-project-skills.ps1\n```\n\nVerify existing routers without writing:\n\n```powershell\npowershell -ExecutionPolicy Bypass -File .agents/skills/project-skill-governance/scripts/govern-project-skills.ps1 -VerifyOnly\n```\n\nUse `-CreateMissingAgentDirs` only when the project intentionally wants empty agent config folders such as `.cursor/skills` or `.qoder/skills` created.\n\n## Router Contract\n\nRouter skills must be fully generated compatibility shims:\n\n- Frontmatter must be copied directly from the canonical `.agents/skills/<skill-name>/SKILL.md`.\n- Body must contain the relative canonical path and no substantive workflow instructions.\n- The relative path must resolve from the router skill directory to the canonical skill folder.\n- The router must tell the agent to read `SKILL.md` inside that canonical folder and treat bundled resources as part of the skill.\n\n```text\n../../../.agents/skills/<skill-name>\n```\n\nDo not maintain substantive workflow instructions in `.claude/skills`, `.cursor/skills`, `.qoder/skills`, `.codex/skills`, or other agent-specific copies after governance has been applied.\n\n## Validation\n\nAfter applying changes, run:\n\n```powershell\npython <path-to-skill-creator>/scripts/quick_validate.py .agents\\skills\\project-skill-governance\n```\n\nIf broad validation is needed, run the same validator against each folder under `.agents/skills`.\n"
+      },
+      "inventory": {
+        "manifests": 1,
+        "skills": 1,
+        "scripts": 1,
+        "files": 3
+      }
+    },
+    {
+      "name": "xhs-note-scraper",
+      "source": "plugins/xhs-note-scraper",
+      "description": "Export public Xiaohongshu/XHS note pages to Markdown, JSON, raw HTML, and downloaded images using public HTTP fetches.",
+      "version": "0.1.0",
+      "author": {
+        "name": "JupiterTheWarlock"
+      },
+      "homepage": "https://github.com/JupiterTheWarlock/jthewl-skills",
+      "repository": "https://github.com/JupiterTheWarlock/jthewl-skills",
+      "license": "MIT",
+      "category": "Content",
+      "tags": [
+        "xhs",
+        "xiaohongshu",
+        "scraper",
+        "archive",
+        "markdown",
+        "skill"
+      ],
+      "hub": {
+        "$schema": "../plugin.schema.json",
+        "name": "xhs-note-scraper",
+        "hubDesc": "用于把公开小红书笔记导出为 Markdown、JSON、原始 HTML 和图片素材的归档工具。设计重点是只使用公开 HTTP 内容，不依赖登录态或本地浏览器。",
+        "shortLabel": "XHS note export",
+        "status": "stable",
+        "updatedAt": "2026-05-25",
+        "maintainer": {
+          "name": "JupiterTheWarlock",
+          "url": "https://github.com/JupiterTheWarlock"
+        },
+        "originalAuthor": {
+          "name": "JupiterTheWarlock",
+          "url": "https://github.com/JupiterTheWarlock"
+        },
+        "provenance": {
+          "type": "original",
+          "sourceName": "",
+          "sourceUrl": "",
+          "license": "MIT",
+          "notes": ""
+        },
+        "links": [
+          {
+            "label": "Repository",
+            "url": "https://github.com/JupiterTheWarlock/jthewl-skills"
+          }
+        ],
+        "useCases": [
+          "归档公开小红书笔记",
+          "导出 Markdown 和结构化 JSON",
+          "下载公开页面暴露的图片素材"
+        ],
+        "warnings": [
+          "只处理公开 HTTP 页面暴露的数据；如果页面不暴露 SSR 数据或图片 URL，应报告限制并停止"
+        ],
+        "screenshots": []
+      },
+      "runtimeManifest": {
+        "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+        "name": "xhs-note-scraper",
+        "description": "Export public Xiaohongshu/XHS note pages to Markdown, JSON, raw HTML, and downloaded images using public HTTP fetches.",
+        "version": "0.1.0",
+        "author": {
+          "name": "JupiterTheWarlock"
+        },
+        "homepage": "https://github.com/JupiterTheWarlock/jthewl-skills",
+        "repository": "https://github.com/JupiterTheWarlock/jthewl-skills",
+        "license": "MIT",
+        "keywords": [
+          "xhs",
+          "xiaohongshu",
+          "scraper",
+          "archive",
+          "markdown",
+          "skill"
+        ]
+      },
+      "commands": {
+        "slashInstall": "/plugin install xhs-note-scraper@jthewl-skills",
+        "cliInstall": "claude plugin install xhs-note-scraper@jthewl-skills",
+        "sessionLoad": "claude --plugin-url https://jthewl.cc/plugins/xhs-note-scraper.zip",
+        "localDev": "claude --plugin-dir ./plugins/xhs-note-scraper"
+      },
+      "updatedAt": "2026-05-25",
+      "zipUrl": "https://jthewl.cc/plugins/xhs-note-scraper.zip",
+      "githubUrl": "https://github.com/JupiterTheWarlock/jthewl-skills/tree/main/plugins/xhs-note-scraper",
+      "fileTree": [
+        {
+          "path": ".claude-plugin",
+          "type": "directory"
+        },
+        {
+          "path": ".claude-plugin/plugin.json",
+          "type": "file",
+          "size": 562,
+          "extension": "json",
+          "isText": true,
+          "isLarge": false,
+          "rawUrl": "https://raw.githubusercontent.com/JupiterTheWarlock/jthewl-skills/main/plugins/xhs-note-scraper/.claude-plugin/plugin.json",
+          "githubUrl": "https://github.com/JupiterTheWarlock/jthewl-skills/blob/main/plugins/xhs-note-scraper/.claude-plugin/plugin.json"
+        },
+        {
+          "path": "skills",
+          "type": "directory"
+        },
+        {
+          "path": "skills/xhs-note-scraper",
+          "type": "directory"
+        },
+        {
+          "path": "skills/xhs-note-scraper/scripts",
+          "type": "directory"
+        },
+        {
+          "path": "skills/xhs-note-scraper/scripts/scrape_xhs_note.js",
+          "type": "file",
+          "size": 5278,
+          "extension": "js",
+          "isText": true,
+          "isLarge": false,
+          "rawUrl": "https://raw.githubusercontent.com/JupiterTheWarlock/jthewl-skills/main/plugins/xhs-note-scraper/skills/xhs-note-scraper/scripts/scrape_xhs_note.js",
+          "githubUrl": "https://github.com/JupiterTheWarlock/jthewl-skills/blob/main/plugins/xhs-note-scraper/skills/xhs-note-scraper/scripts/scrape_xhs_note.js"
+        },
+        {
+          "path": "skills/xhs-note-scraper/SKILL.md",
+          "type": "file",
+          "size": 2166,
+          "extension": "md",
+          "isText": true,
+          "isLarge": false,
+          "rawUrl": "https://raw.githubusercontent.com/JupiterTheWarlock/jthewl-skills/main/plugins/xhs-note-scraper/skills/xhs-note-scraper/SKILL.md",
+          "githubUrl": "https://github.com/JupiterTheWarlock/jthewl-skills/blob/main/plugins/xhs-note-scraper/skills/xhs-note-scraper/SKILL.md"
+        }
+      ],
+      "defaultPreview": "skills/xhs-note-scraper/SKILL.md",
+      "previewContents": {
+        ".claude-plugin/plugin.json": "{\n  \"$schema\": \"https://json.schemastore.org/claude-code-plugin-manifest.json\",\n  \"name\": \"xhs-note-scraper\",\n  \"description\": \"Export public Xiaohongshu/XHS note pages to Markdown, JSON, raw HTML, and downloaded images using public HTTP fetches.\",\n  \"version\": \"0.1.0\",\n  \"author\": {\n    \"name\": \"JupiterTheWarlock\"\n  },\n  \"homepage\": \"https://github.com/JupiterTheWarlock/jthewl-skills\",\n  \"repository\": \"https://github.com/JupiterTheWarlock/jthewl-skills\",\n  \"license\": \"MIT\",\n  \"keywords\": [\"xhs\", \"xiaohongshu\", \"scraper\", \"archive\", \"markdown\", \"skill\"]\n}\n",
+        "skills/xhs-note-scraper/scripts/scrape_xhs_note.js": "#!/usr/bin/env node\r\n\r\nconst fs = require(\"fs\");\r\nconst path = require(\"path\");\r\nconst vm = require(\"vm\");\r\n\r\nfunction usage() {\r\n  console.error('Usage: node scrape_xhs_note.js \"<xiaohongshu-note-url>\" --out \"<output-dir>\"');\r\n  process.exit(2);\r\n}\r\n\r\nconst args = process.argv.slice(2);\r\nif (args.length < 1) usage();\r\n\r\nconst url = args[0];\r\nlet outDir = process.cwd();\r\nfor (let i = 1; i < args.length; i++) {\r\n  if (args[i] === \"--out\" && args[i + 1]) {\r\n    outDir = args[++i];\r\n  } else {\r\n    usage();\r\n  }\r\n}\r\n\r\nif (!/^https:\\/\\/www\\.xiaohongshu\\.com\\/explore\\/[A-Za-z0-9]+/.test(url)) {\r\n  throw new Error(\"Expected a public https://www.xiaohongshu.com/explore/<note-id> URL.\");\r\n}\r\n\r\nconst headers = {\r\n  \"user-agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36\",\r\n  \"accept-language\": \"zh-CN,zh;q=0.9,en;q=0.8\",\r\n  \"referer\": \"https://www.xiaohongshu.com/\",\r\n};\r\n\r\nasync function fetchBytes(targetUrl) {\r\n  const response = await fetch(targetUrl, { headers, redirect: \"follow\" });\r\n  if (!response.ok) {\r\n    throw new Error(`HTTP ${response.status} for ${targetUrl}`);\r\n  }\r\n  return Buffer.from(await response.arrayBuffer());\r\n}\r\n\r\nfunction extractInitialState(html) {\r\n  const match = html.match(/<script>window\\.__INITIAL_STATE__=(.*?)<\\/script>/s);\r\n  if (!match) {\r\n    throw new Error(\"window.__INITIAL_STATE__ was not found in the public HTML.\");\r\n  }\r\n\r\n  const sandbox = { window: {} };\r\n  vm.createContext(sandbox);\r\n  vm.runInContext(`window.__INITIAL_STATE__=${match[1]}`, sandbox, { timeout: 1000 });\r\n  return sandbox.window.__INITIAL_STATE__;\r\n}\r\n\r\nfunction normalizeNote(state) {\r\n  const noteId = state?.note?.firstNoteId;\r\n  const note = state?.note?.noteDetailMap?.[noteId]?.note;\r\n  if (!noteId || !note) {\r\n    throw new Error(\"Public SSR state did not contain note detail data.\");\r\n  }\r\n\r\n  return {\r\n    sourceUrl: `https://www.xiaohongshu.com/explore/${noteId}`,\r\n    noteId,\r\n    title: note.title || \"\",\r\n    author: note.user?.nickname || \"\",\r\n    userId: note.user?.userId || \"\",\r\n    avatar: note.user?.avatar || \"\",\r\n    createdAt: note.time ? new Date(note.time).toISOString() : \"\",\r\n    lastUpdateAt: note.lastUpdateTime ? new Date(note.lastUpdateTime).toISOString() : \"\",\r\n    ipLocation: note.ipLocation || \"\",\r\n    tags: (note.tagList || []).map((tag) => tag.name).filter(Boolean),\r\n    desc: note.desc || \"\",\r\n    interactInfo: note.interactInfo || {},\r\n    images: (note.imageList || []).map((image, index) => ({\r\n      index: index + 1,\r\n      width: image.width || null,\r\n      height: image.height || null,\r\n      urlDefault: image.urlDefault || image.infoList?.find((item) => item.imageScene === \"WB_DFT\")?.url || \"\",\r\n      urlPre: image.urlPre || image.infoList?.find((item) => item.imageScene === \"WB_PRV\")?.url || \"\",\r\n    })).filter((image) => image.urlDefault || image.urlPre),\r\n  };\r\n}\r\n\r\nfunction markdown(note) {\r\n  const imageLines = [];\r\n  for (const image of note.images) {\r\n    const localName = `assets/image-${String(image.index).padStart(2, \"0\")}.jpg`;\r\n    imageLines.push(`### Image ${image.index} (source metadata: ${image.width || \"?\"}x${image.height || \"?\"})`);\r\n    imageLines.push(\"\");\r\n    imageLines.push(`![image ${image.index}](${localName})`);\r\n    imageLines.push(\"\");\r\n    imageLines.push(image.urlDefault || image.urlPre);\r\n    imageLines.push(\"\");\r\n  }\r\n\r\n  return [\r\n    `# ${note.title}`,\r\n    \"\",\r\n    `- Author: ${note.author}`,\r\n    `- Note ID: ${note.noteId}`,\r\n    `- Created at: ${note.createdAt}`,\r\n    `- IP location: ${note.ipLocation}`,\r\n    `- Source: ${note.sourceUrl}`,\r\n    `- Tags: ${note.tags.map((tag) => `#${tag}`).join(\" \")}`,\r\n    `- Likes: ${note.interactInfo.likedCount ?? \"\"}`,\r\n    `- Favorites: ${note.interactInfo.collectedCount ?? \"\"}`,\r\n    `- Comments: ${note.interactInfo.commentCount ?? \"\"}`,\r\n    `- Shares: ${note.interactInfo.shareCount ?? \"\"}`,\r\n    \"\",\r\n    \"## Text\",\r\n    \"\",\r\n    note.desc.replace(/\\t/g, \"\").trim(),\r\n    \"\",\r\n    \"## Images\",\r\n    \"\",\r\n    ...imageLines,\r\n  ].join(\"\\n\");\r\n}\r\n\r\nasync function main() {\r\n  fs.mkdirSync(outDir, { recursive: true });\r\n  const assetsDir = path.join(outDir, \"assets\");\r\n  fs.mkdirSync(assetsDir, { recursive: true });\r\n\r\n  const html = (await fetchBytes(url)).toString(\"utf8\");\r\n  fs.writeFileSync(path.join(outDir, \"page.html\"), html, \"utf8\");\r\n\r\n  const state = extractInitialState(html);\r\n  const note = normalizeNote(state);\r\n\r\n  for (const image of note.images) {\r\n    const imageUrl = image.urlDefault || image.urlPre;\r\n    const filePath = path.join(assetsDir, `image-${String(image.index).padStart(2, \"0\")}.jpg`);\r\n    const data = await fetchBytes(imageUrl);\r\n    fs.writeFileSync(filePath, data);\r\n    image.localPath = path.relative(outDir, filePath).replace(/\\\\/g, \"/\");\r\n    image.downloadedBytes = data.length;\r\n  }\r\n\r\n  fs.writeFileSync(path.join(outDir, \"note.json\"), JSON.stringify(note, null, 2), \"utf8\");\r\n  fs.writeFileSync(path.join(outDir, \"note.md\"), markdown(note), \"utf8\");\r\n\r\n  console.log(JSON.stringify({\r\n    title: note.title,\r\n    author: note.author,\r\n    noteId: note.noteId,\r\n    images: note.images.length,\r\n    outDir: path.resolve(outDir),\r\n  }, null, 2));\r\n}\r\n\r\nmain().catch((error) => {\r\n  console.error(error.message);\r\n  process.exit(1);\r\n});\r\n",
+        "skills/xhs-note-scraper/SKILL.md": "---\r\nname: xhs-note-scraper\r\ndescription: Export public Xiaohongshu/XHS note pages to Markdown, JSON, raw HTML, and downloaded images. Use when the user asks to scrape, archive, save, download, or \"扒下来\" a public xiaohongshu.com/explore note, especially when avoiding browser automation, local browser access, or logged-in account risk.\r\n---\r\n\r\n# XHS Note Scraper\r\n\r\n## Core Rule\r\n\r\nUse only public HTTP fetches. Do not use local browser automation, user login cookies, account sessions, or attempts to bypass access controls. If the public page does not expose SSR note data or image URLs, report that limitation and stop.\r\n\r\n## Quick Start\r\n\r\nRun the bundled script:\r\n\r\n```bash\r\nnode <skill-dir>/scripts/scrape_xhs_note.js \"<xiaohongshu note url>\" --out \"<output-dir>\"\r\n```\r\n\r\nUse the user's current workspace as the default output directory unless they specify another path.\r\n\r\nThe script writes:\r\n\r\n- `note.md` - readable Markdown with text, metadata, and local image references\r\n- `note.json` - structured note data and image URLs\r\n- `page.html` - fetched public HTML\r\n- `assets/image-XX.jpg` - downloaded images\r\n\r\n## Workflow\r\n\r\n1. Confirm the URL is a Xiaohongshu note URL, typically `https://www.xiaohongshu.com/explore/<note-id>...`.\r\n2. Run `scripts/scrape_xhs_note.js` with the URL and output directory.\r\n3. Verify the script output summary: title, author, note id, image count, and downloaded image paths.\r\n4. If downloads fail with `403` for raw/original image attempts, keep the public CDN default image URLs exposed by the page.\r\n5. In the final answer, link to `note.md`, `note.json`, `page.html`, and the `assets` directory. Mention any limitations such as missing comments or unavailable original-resolution files.\r\n\r\n## Notes\r\n\r\n- SSR data is expected in `window.__INITIAL_STATE__`; the script extracts `note.noteDetailMap[firstNoteId].note`.\r\n- Public note pages often expose text, author, tags, basic interaction counts, and images. Comments may remain dynamic and are not guaranteed.\r\n- PowerShell can display UTF-8 Chinese incorrectly through some pipelines. Trust files written by the script as UTF-8 and verify with Node when needed.\r\n"
+      },
+      "inventory": {
+        "manifests": 1,
+        "skills": 1,
+        "scripts": 1,
+        "files": 3
+      }
+    }
+  ]
+}

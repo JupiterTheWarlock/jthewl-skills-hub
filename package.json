@@ -5,6 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "test": "node --test",
+    "catalog": "node scripts/build-catalog.mjs",
+    "prebuild": "npm run catalog",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
