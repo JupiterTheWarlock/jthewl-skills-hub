@@ -18,6 +18,7 @@ import './App.css'
 const CATALOG_URL = '/data/catalog.json'
 const HUB_REPO_URL = 'https://github.com/JupiterTheWarlock/jthewl-skills-hub'
 const MARKETPLACE_REPO_URL = 'https://github.com/JupiterTheWarlock/jthewl-skills'
+const MARKETPLACE_NAME = 'jthewl-skills'
 const EMPTY_PLUGINS: CatalogPlugin[] = []
 
 type Person = {
@@ -116,6 +117,18 @@ type LoadState =
   | { status: 'ready'; data: Catalog }
   | { status: 'error'; message: string }
 
+type FilterMenuProps = {
+  id: string
+  label: string
+  allLabel: string
+  value: string
+  options: string[]
+  open: boolean
+  onToggle: (id: string) => void
+  onSelect: (value: string) => void
+  formatValue?: (value: string) => string
+}
+
 function formatDate(value?: string | null) {
   if (!value) return 'unknown'
   return value.slice(0, 10)
@@ -147,11 +160,35 @@ function isVisible(entry: FileTreeEntry, openFolders: Set<string>) {
   return true
 }
 
+function formatFilterValue(value: string, allLabel: string) {
+  return value === 'all' ? allLabel : value
+}
+
+function formatMarketplaceValue(value?: string) {
+  if (!value || value === 'unknown') return 'Unknown marketplace'
+  if (value === 'original') return MARKETPLACE_NAME
+  return value
+}
+
 function commandLabel(command: string) {
   if (command.startsWith('/')) return 'Claude Code'
-  if (command.includes('--plugin-url')) return 'Session load'
-  if (command.includes('--plugin-dir')) return 'Local dev'
   return 'CLI'
+}
+
+function agentInstallPrompt(pluginName: string) {
+  return [
+    `Install the ${pluginName} plugin from JupiterTheWarlock/jthewl-skills.`,
+    '',
+    'If you are running inside an interactive Claude Code session, use the /plugin commands:',
+    '/plugin marketplace add JupiterTheWarlock/jthewl-skills',
+    `/plugin install ${pluginName}@jthewl-skills`,
+    '',
+    'If you can only run shell commands, use the equivalent CLI commands:',
+    'claude plugin marketplace add JupiterTheWarlock/jthewl-skills',
+    `claude plugin install ${pluginName}@jthewl-skills`,
+    '',
+    'After installation, verify the plugin is available before finishing.',
+  ].join('\n')
 }
 
 function GitHubMark({ size = 18 }: { size?: number }) {
@@ -194,6 +231,87 @@ function CommandCard({
   )
 }
 
+function PromptCard({
+  prompt,
+  copiedKey,
+  copyError,
+  onCopy,
+}: {
+  prompt: string
+  copiedKey: string | null
+  copyError: string | null
+  onCopy: (value: string, key: string) => void
+}) {
+  const key = `agent-prompt:${prompt}`
+
+  return (
+    <button className="promptCard" type="button" onClick={() => onCopy(prompt, key)}>
+      <span>
+        <Terminal size={15} />
+        Agent prompt
+      </span>
+      <code>{prompt}</code>
+      {copiedKey === key ? <Check size={16} /> : copyError === key ? <AlertCircle size={16} /> : <Copy size={16} />}
+    </button>
+  )
+}
+
+function FilterMenu({
+  id,
+  label,
+  allLabel,
+  value,
+  options,
+  open,
+  onToggle,
+  onSelect,
+  formatValue,
+}: FilterMenuProps) {
+  const displayValue = formatValue ?? ((item: string) => formatFilterValue(item, allLabel))
+
+  return (
+    <div
+      className="filterMenu"
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) onToggle('')
+      }}
+    >
+      <button
+        type="button"
+        className="filterTrigger"
+        aria-expanded={open}
+        aria-haspopup="listbox"
+        onClick={() => onToggle(open ? '' : id)}
+      >
+        <span>
+          <small>{label}</small>
+          <strong>{displayValue(value)}</strong>
+        </span>
+        <ChevronDown size={14} />
+      </button>
+      {open ? (
+        <div className="filterMenuList" role="listbox" aria-label={`${label} filter`}>
+          {options.map((item) => (
+            <button
+              key={item}
+              type="button"
+              role="option"
+              aria-selected={value === item}
+              className={value === item ? 'filterOption selected' : 'filterOption'}
+              onClick={() => {
+                onSelect(item)
+                onToggle('')
+              }}
+            >
+              {displayValue(item)}
+            </button>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
 function App() {
   const [state, setState] = useState<LoadState>({ status: 'loading' })
   const [query, setQuery] = useState('')
@@ -201,6 +319,7 @@ function App() {
   const [provenance, setProvenance] = useState('all')
   const [tag, setTag] = useState('all')
   const [recentOnly, setRecentOnly] = useState(false)
+  const [openFilter, setOpenFilter] = useState('')
   const [activeName, setActiveName] = useState<string | null>(null)
   const [selectedFiles, setSelectedFiles] = useState<Record<string, string>>({})
   const [openFolderPaths, setOpenFolderPaths] = useState<Record<string, string[]>>({})
@@ -457,29 +576,47 @@ function App() {
             />
           </label>
 
-          <div className="filters">
-            <select value={category} onChange={(event) => setCategory(event.target.value)} aria-label="Category filter">
-              {categories.map((item) => (
-                <option key={item}>{item}</option>
-              ))}
-            </select>
-            <select value={provenance} onChange={(event) => setProvenance(event.target.value)} aria-label="Provenance filter">
-              {provenances.map((item) => (
-                <option key={item}>{item}</option>
-              ))}
-            </select>
-            <select value={tag} onChange={(event) => setTag(event.target.value)} aria-label="Tag filter">
-              {tags.map((item) => (
-                <option key={item}>{item}</option>
-              ))}
-            </select>
+          <div className="filters" aria-label="Plugin filters">
+            <FilterMenu
+              id="category"
+              label="Category"
+              allLabel="Any category"
+              value={category}
+              options={categories}
+              open={openFilter === 'category'}
+              onToggle={setOpenFilter}
+              onSelect={setCategory}
+            />
+            <FilterMenu
+              id="origin"
+              label="Marketplace"
+              allLabel="Any marketplace"
+              value={provenance}
+              options={provenances}
+              open={openFilter === 'origin'}
+              onToggle={setOpenFilter}
+              onSelect={setProvenance}
+              formatValue={(value) =>
+                value === 'all' ? 'Any marketplace' : formatMarketplaceValue(value)
+              }
+            />
+            <FilterMenu
+              id="tag"
+              label="Tag"
+              allLabel="Any tag"
+              value={tag}
+              options={tags}
+              open={openFilter === 'tag'}
+              onToggle={setOpenFilter}
+              onSelect={setTag}
+            />
             <label className="checkFilter">
               <input
                 checked={recentOnly}
                 onChange={(event) => setRecentOnly(event.target.checked)}
                 type="checkbox"
               />
-              recent
+              Updated recently
             </label>
           </div>
 
@@ -561,9 +698,15 @@ function App() {
 
               <div className="pluginCommands">
                 <div className="commandHeading">
-                  <strong>Selected plugin</strong>
-                  <span>{activePlugin.name}</span>
+                  <strong>Install</strong>
+                  <span>Prompt an agent, or run the commands manually.</span>
                 </div>
+                <PromptCard
+                  prompt={agentInstallPrompt(activePlugin.name)}
+                  copiedKey={copiedKey}
+                  copyError={copyError}
+                  onCopy={copyValue}
+                />
                 <div className="pluginCommandGrid">
                   <CommandCard
                     command={activePlugin.commands.slashInstall}
@@ -577,24 +720,14 @@ function App() {
                     copyError={copyError}
                     onCopy={copyValue}
                   />
-                  <CommandCard
-                    command={activePlugin.commands.sessionLoad}
-                    copiedKey={copiedKey}
-                    copyError={copyError}
-                    onCopy={copyValue}
-                  />
-                  <CommandCard
-                    command={activePlugin.commands.localDev}
-                    copiedKey={copiedKey}
-                    copyError={copyError}
-                    onCopy={copyValue}
-                  />
                 </div>
               </div>
 
               <div className="tags">
                 <span className="badge">{activePlugin.hub?.status ?? 'unknown'}</span>
-                <span className="badge">{activePlugin.hub?.provenance?.type ?? 'unknown provenance'}</span>
+                <span className="badge">
+                  {formatMarketplaceValue(activePlugin.hub?.provenance?.type)}
+                </span>
                 {(activePlugin.tags ?? []).map((item) => (
                   <span key={item}>{item}</span>
                 ))}
