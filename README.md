@@ -34,3 +34,5 @@ public/data/catalog.json
 ```
 
 `npm run catalog` builds it from the sibling `../jthewl-skills` checkout by merging the marketplace manifest, `.jthewl-hub` metadata, plugin manifests, file trees, preview text, and consensus profile color tokens. Production can deploy the generated catalog without requiring a sibling checkout at runtime.
+
+When the sibling checkout is missing (for example in cloud builds), catalog generation automatically clones `JupiterTheWarlock/jthewl-skills` and builds from that source.

@@ -1,5 +1,6 @@
 import { execFileSync } from 'node:child_process'
-import { mkdir, readdir, readFile, stat, writeFile } from 'node:fs/promises'
+import { mkdir, mkdtemp, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises'
+import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -30,6 +31,7 @@ const marketplacePath = path.join(skillsRoot, '.claude-plugin', 'marketplace.jso
 const hubMetadataRoot = path.join(skillsRoot, '.jthewl-hub', 'plugins')
 const outputPath = path.join(hubRoot, 'public', 'data', 'catalog.json')
 const optionalMode = process.argv.includes('--if-present')
+const fallbackSkillsRepoUrl = 'https://github.com/JupiterTheWarlock/jthewl-skills.git'
 
 const TEXT_EXTENSIONS = new Set([
   '.css',
@@ -139,27 +141,36 @@ function componentInventory(tree) {
 }
 
 async function buildCatalog() {
-  if (optionalMode) {
-    const [hasMarketplace, hasOutput] = await Promise.all([
-      stat(marketplacePath).then(() => true, () => false),
-      stat(outputPath).then(() => true, () => false),
-    ])
+  let activeSkillsRoot = skillsRoot
+  let activeMarketplacePath = marketplacePath
+  let activeHubMetadataRoot = hubMetadataRoot
+  let cleanupTempDir = null
 
-    if (!hasMarketplace && hasOutput) {
-      console.log('Sibling ../jthewl-skills not found; using committed public/data/catalog.json')
-      return
-    }
+  const hasMarketplace = await stat(activeMarketplacePath).then(() => true, () => false)
+  if (!hasMarketplace) {
+    const tempDir = await mkdtemp(path.join(os.tmpdir(), 'jthewl-skills-hub-'))
+    const cloneTarget = path.join(tempDir, 'jthewl-skills')
+    execFileSync('git', ['clone', '--depth', '1', fallbackSkillsRepoUrl, cloneTarget], { stdio: 'inherit' })
+    activeSkillsRoot = cloneTarget
+    activeMarketplacePath = path.join(activeSkillsRoot, '.claude-plugin', 'marketplace.json')
+    activeHubMetadataRoot = path.join(activeSkillsRoot, '.jthewl-hub', 'plugins')
+    cleanupTempDir = tempDir
+    console.log('Using cloned jthewl-skills repository for catalog generation')
   }
 
-  const [marketplace, profile] = await Promise.all([readJson(marketplacePath), readJson(consensusProfilePath)])
+  if (optionalMode && !hasMarketplace) {
+    console.log('Optional mode: sibling marketplace missing, switched to remote clone')
+  }
+
+  const [marketplace, profile] = await Promise.all([readJson(activeMarketplacePath), readJson(consensusProfilePath)])
 
   const plugins = await Promise.all(
     marketplace.plugins.map(async (plugin) => {
       const source = cleanSource(plugin.source)
-      const pluginRoot = path.join(skillsRoot, source)
+      const pluginRoot = path.join(activeSkillsRoot, source)
       const [pluginManifest, hubMetadata] = await Promise.all([
         readOptionalJson(path.join(pluginRoot, '.claude-plugin', 'plugin.json')),
-        readOptionalJson(path.join(hubMetadataRoot, `${plugin.name}.json`)),
+        readOptionalJson(path.join(activeHubMetadataRoot, `${plugin.name}.json`)),
       ])
       const scanned = await scanPluginTree(pluginRoot, source)
 
@@ -208,6 +219,10 @@ async function buildCatalog() {
   await mkdir(path.dirname(outputPath), { recursive: true })
   await writeFile(outputPath, `${JSON.stringify(catalog, null, 2)}\n`, 'utf8')
   console.log(`Wrote ${path.relative(hubRoot, outputPath)} with ${plugins.length} plugins`)
+
+  if (cleanupTempDir) {
+    await rm(cleanupTempDir, { recursive: true, force: true })
+  }
 }
 
 buildCatalog().catch((error) => {
