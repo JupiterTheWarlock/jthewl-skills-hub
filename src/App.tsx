@@ -8,12 +8,14 @@ import {
   ExternalLink,
   File,
   Folder,
+  Languages,
   Package,
   Search,
   ShieldCheck,
   Terminal,
 } from 'lucide-react'
 import './App.css'
+import { LANGUAGES, resolveLanguage, t, type Language } from './localization'
 
 const CATALOG_URL = '/data/catalog.json'
 const HUB_REPO_URL = 'https://github.com/JupiterTheWarlock/jthewl-skills-hub'
@@ -129,8 +131,8 @@ type FilterMenuProps = {
   formatValue?: (value: string) => string
 }
 
-function formatDate(value?: string | null) {
-  if (!value) return 'unknown'
+function formatDate(value: string | null | undefined, language: Language) {
+  if (!value) return t(language, 'unknown')
   return value.slice(0, 10)
 }
 
@@ -164,8 +166,8 @@ function formatFilterValue(value: string, allLabel: string) {
   return value === 'all' ? allLabel : value
 }
 
-function formatMarketplaceValue(value?: string) {
-  if (!value || value === 'unknown') return 'Unknown marketplace'
+function formatMarketplaceValue(value: string | undefined, language: Language) {
+  if (!value || value === 'unknown') return t(language, 'unknownMarketplace')
   if (value === 'original') return MARKETPLACE_NAME
   return value
 }
@@ -175,7 +177,23 @@ function commandLabel(command: string) {
   return 'CLI'
 }
 
-function agentInstallPrompt(pluginName: string) {
+function agentInstallPrompt(pluginName: string, language: Language) {
+  if (language === 'zh') {
+    return [
+      `从 JupiterTheWarlock/jthewl-skills 安装 ${pluginName} 插件。`,
+      '',
+      '如果你在交互式 Claude Code 会话中运行，请使用 /plugin 命令：',
+      '/plugin marketplace add JupiterTheWarlock/jthewl-skills',
+      `/plugin install ${pluginName}@jthewl-skills`,
+      '',
+      '如果只能运行 shell 命令，请使用等效 CLI 命令：',
+      'claude plugin marketplace add JupiterTheWarlock/jthewl-skills',
+      `claude plugin install ${pluginName}@jthewl-skills`,
+      '',
+      '安装后先确认插件可用，再结束任务。',
+    ].join('\n')
+  }
+
   return [
     `Install the ${pluginName} plugin from JupiterTheWarlock/jthewl-skills.`,
     '',
@@ -233,11 +251,13 @@ function CommandCard({
 
 function PromptCard({
   prompt,
+  label,
   copiedKey,
   copyError,
   onCopy,
 }: {
   prompt: string
+  label: string
   copiedKey: string | null
   copyError: string | null
   onCopy: (value: string, key: string) => void
@@ -248,7 +268,7 @@ function PromptCard({
     <button className="promptCard" type="button" onClick={() => onCopy(prompt, key)}>
       <span>
         <Terminal size={15} />
-        Agent prompt
+        {label}
       </span>
       <code>{prompt}</code>
       {copiedKey === key ? <Check size={16} /> : copyError === key ? <AlertCircle size={16} /> : <Copy size={16} />}
@@ -290,7 +310,7 @@ function FilterMenu({
         <ChevronDown size={14} />
       </button>
       {open ? (
-        <div className="filterMenuList" role="listbox" aria-label={`${label} filter`}>
+        <div className="filterMenuList" role="listbox" aria-label={label}>
           {options.map((item) => (
             <button
               key={item}
@@ -314,6 +334,9 @@ function FilterMenu({
 
 function App() {
   const [state, setState] = useState<LoadState>({ status: 'loading' })
+  const [language, setLanguage] = useState<Language>(() =>
+    resolveLanguage(window.localStorage.getItem('jthewl-skills-hub-language'), navigator.languages),
+  )
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState('all')
   const [provenance, setProvenance] = useState('all')
@@ -325,6 +348,10 @@ function App() {
   const [openFolderPaths, setOpenFolderPaths] = useState<Record<string, string[]>>({})
   const [copiedKey, setCopiedKey] = useState<string | null>(null)
   const [copyError, setCopyError] = useState<string | null>(null)
+
+  useEffect(() => {
+    window.localStorage.setItem('jthewl-skills-hub-language', language)
+  }, [language])
 
   useEffect(() => {
     let cancelled = false
@@ -361,10 +388,12 @@ function App() {
     ? new Date(catalog.generatedAt).getTime() - 1000 * 60 * 60 * 24 * 45
     : 0
 
+  const fallbackCategory = t(language, 'uncategorized')
   const categories = useMemo(
-    () => ['all', ...Array.from(new Set(plugins.map((plugin) => plugin.category ?? 'Uncategorized'))).sort()],
-    [plugins],
+    () => ['all', ...Array.from(new Set(plugins.map((plugin) => plugin.category ?? fallbackCategory))).sort()],
+    [fallbackCategory, plugins],
   )
+
   const tags = useMemo(
     () => ['all', ...Array.from(new Set(plugins.flatMap((plugin) => plugin.tags ?? []))).sort()],
     [plugins],
@@ -396,13 +425,13 @@ function App() {
 
       return (
         (!normalizedQuery || haystack.includes(normalizedQuery)) &&
-        (category === 'all' || (plugin.category ?? 'Uncategorized') === category) &&
+        (category === 'all' || (plugin.category ?? fallbackCategory) === category) &&
         (provenance === 'all' || (plugin.hub?.provenance?.type ?? 'unknown') === provenance) &&
         (tag === 'all' || (plugin.tags ?? []).includes(tag)) &&
         (!recentOnly || updatedAt >= recentThreshold)
       )
     })
-  }, [category, normalizedQuery, plugins, provenance, recentOnly, recentThreshold, tag])
+  }, [category, fallbackCategory, normalizedQuery, plugins, provenance, recentOnly, recentThreshold, tag])
 
   const activePlugin =
     filteredPlugins.find((plugin) => plugin.name === activeName) ?? filteredPlugins[0] ?? null
@@ -509,29 +538,40 @@ function App() {
           <h1>JupiterTheWarlock / jthewl-skills</h1>
         </div>
         <div className="topbarActions">
-          <span className={state.status === 'ready' ? 'statusDot ready' : 'statusDot'}>
-            {state.status === 'ready' ? 'catalog ready' : state.status}
-          </span>
-          <a className="textIconButton" href={HUB_REPO_URL} rel="noreferrer" aria-label="Open hub GitHub repository">
+          <div className="topbarFilter">
+            <Languages size={16} />
+            <FilterMenu
+              id="language"
+              label={t(language, 'language')}
+              allLabel={t(language, 'language')}
+              value={language}
+              options={[...LANGUAGES]}
+              open={openFilter === 'language'}
+              onToggle={setOpenFilter}
+              onSelect={(value) => setLanguage(value as Language)}
+              formatValue={(value) => value.toUpperCase()}
+            />
+          </div>
+          <a className="textIconButton" href={HUB_REPO_URL} rel="noreferrer" aria-label={t(language, 'openHubRepo')}>
             <GitHubMark />
-            hub repo
+            {t(language, 'hubRepo')}
           </a>
           <a
             className="textIconButton"
             href={MARKETPLACE_REPO_URL}
             rel="noreferrer"
-            aria-label="Open skills marketplace GitHub repository"
+            aria-label={t(language, 'openSkillsMarketplace')}
           >
             <GitHubMark />
-            skills marketplace
+            {t(language, 'skillsMarketplace')}
           </a>
         </div>
       </header>
 
-      <section className="globalCommands" aria-label="Marketplace setup commands">
+      <section className="globalCommands" aria-label={t(language, 'globalSetupTitle')}>
         <div className="commandHeading">
-          <strong>Global setup</strong>
-          <span>Add this marketplace once, then install plugins from their detail panel.</span>
+          <strong>{t(language, 'globalSetupTitle')}</strong>
+          <span>{t(language, 'globalSetupDescription')}</span>
         </div>
         <div className="commandStrip">
           <CommandCard
@@ -549,38 +589,38 @@ function App() {
         </div>
       </section>
 
-      <section className="summary" aria-label="Marketplace status">
+      <section className="summary" aria-label={t(language, 'marketplace')}>
         <div>
           <span className="metric">{plugins.length}</span>
-          <span className="metricLabel">plugins</span>
+          <span className="metricLabel">{t(language, 'plugins')}</span>
         </div>
         <div>
           <span className="metric">{catalog?.marketplace.version ?? '-'}</span>
-          <span className="metricLabel">marketplace</span>
+          <span className="metricLabel">{t(language, 'marketplace')}</span>
         </div>
         <div>
-          <span className="metric">{catalog ? formatDate(catalog.generatedAt) : '-'}</span>
-          <span className="metricLabel">last sync</span>
+          <span className="metric">{catalog ? formatDate(catalog.generatedAt, language) : '-'}</span>
+          <span className="metricLabel">{t(language, 'lastSync')}</span>
         </div>
       </section>
 
       <section className="workspace">
-        <aside className="sidebar" aria-label="Plugin browser">
+        <aside className="sidebar" aria-label={t(language, 'pluginBrowser')}>
           <label className="searchBox">
             <Search size={16} />
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search plugins, tags, use cases"
+              placeholder={t(language, 'searchPlaceholder')}
               type="search"
             />
           </label>
 
-          <div className="filters" aria-label="Plugin filters">
+          <div className="filters" aria-label={t(language, 'pluginFilters')}>
             <FilterMenu
               id="category"
-              label="Category"
-              allLabel="Any category"
+              label={t(language, 'category')}
+              allLabel={t(language, 'anyCategory')}
               value={category}
               options={categories}
               open={openFilter === 'category'}
@@ -589,21 +629,21 @@ function App() {
             />
             <FilterMenu
               id="origin"
-              label="Marketplace"
-              allLabel="Any marketplace"
+              label={t(language, 'marketplaceFilter')}
+              allLabel={t(language, 'anyMarketplace')}
               value={provenance}
               options={provenances}
               open={openFilter === 'origin'}
               onToggle={setOpenFilter}
               onSelect={setProvenance}
               formatValue={(value) =>
-                value === 'all' ? 'Any marketplace' : formatMarketplaceValue(value)
+                value === 'all' ? t(language, 'anyMarketplace') : formatMarketplaceValue(value, language)
               }
             />
             <FilterMenu
               id="tag"
-              label="Tag"
-              allLabel="Any tag"
+              label={t(language, 'tag')}
+              allLabel={t(language, 'anyTag')}
               value={tag}
               options={tags}
               open={openFilter === 'tag'}
@@ -616,17 +656,17 @@ function App() {
                 onChange={(event) => setRecentOnly(event.target.checked)}
                 type="checkbox"
               />
-              Updated recently
+              {t(language, 'updatedRecently')}
             </label>
           </div>
 
-          {state.status === 'loading' ? <div className="notice">Loading catalog...</div> : null}
+          {state.status === 'loading' ? <div className="notice">{t(language, 'loadingCatalog')}</div> : null}
           {state.status === 'error' ? (
             <div className="notice error">
               <AlertCircle size={18} />
               <span>{state.message}</span>
               <a href={`${MARKETPLACE_REPO_URL}/blob/main/.claude-plugin/marketplace.json`} target="_blank" rel="noreferrer">
-                raw fallback
+                {t(language, 'rawFallback')}
               </a>
             </div>
           ) : null}
@@ -643,23 +683,23 @@ function App() {
                 <span>
                   <strong>{plugin.name}</strong>
                   <small>
-                    {plugin.hub?.shortLabel ?? plugin.category ?? 'Plugin'} · {formatDate(plugin.updatedAt)}
+                    {plugin.hub?.shortLabel ?? plugin.category ?? t(language, 'plugin')} / {formatDate(plugin.updatedAt, language)}
                   </small>
                 </span>
               </button>
             ))}
             {state.status === 'ready' && filteredPlugins.length === 0 ? (
-              <div className="emptyState">No matching plugins.</div>
+              <div className="emptyState">{t(language, 'noMatchingPlugins')}</div>
             ) : null}
           </div>
         </aside>
 
-        <section className="detail" aria-label="Plugin detail">
+        <section className="detail" aria-label={t(language, 'pluginDetail')}>
           {activePlugin ? (
             <>
               <div className="detailHeader">
                 <div>
-                  <p className="eyebrow">{activePlugin.category ?? 'Plugin'}</p>
+                  <p className="eyebrow">{activePlugin.category ?? t(language, 'plugin')}</p>
                   <h2>{activePlugin.name}</h2>
                 </div>
                 <div className="actions">
@@ -667,21 +707,21 @@ function App() {
                     className="textIconButton"
                     type="button"
                     onClick={() => copyValue(activePlugin.commands.slashInstall, activePlugin.commands.slashInstall)}
-                    aria-label="Copy install command"
-                    title="Copy install command"
+                    aria-label={t(language, 'copyInstallCommand')}
+                    title={t(language, 'copyInstallCommand')}
                   >
                     {copiedKey === activePlugin.commands.slashInstall ? <Check size={18} /> : <Copy size={18} />}
-                    copy install
+                    {t(language, 'copyInstall')}
                   </button>
                   <a
                     className="textIconButton"
                     href={activePlugin.githubUrl}
                     rel="noreferrer"
-                    aria-label="Open plugin source"
-                    title="Open plugin source"
+                    aria-label={t(language, 'openPluginSource')}
+                    title={t(language, 'openPluginSource')}
                   >
                     <ExternalLink size={18} />
-                    source
+                    {t(language, 'source')}
                   </a>
                 </div>
               </div>
@@ -689,7 +729,7 @@ function App() {
               {!activePlugin.hub ? (
                 <div className="inlineWarning">
                   <AlertCircle size={16} />
-                  Missing `.jthewl-hub` metadata. Showing marketplace fields only.
+                  {t(language, 'missingHubMetadata')}
                 </div>
               ) : null}
 
@@ -698,11 +738,12 @@ function App() {
 
               <div className="pluginCommands">
                 <div className="commandHeading">
-                  <strong>Install</strong>
-                  <span>Prompt an agent, or run the commands manually.</span>
+                  <strong>{t(language, 'install')}</strong>
+                  <span>{t(language, 'installDescription')}</span>
                 </div>
                 <PromptCard
-                  prompt={agentInstallPrompt(activePlugin.name)}
+                  prompt={agentInstallPrompt(activePlugin.name, language)}
+                  label={t(language, 'agentPrompt')}
                   copiedKey={copiedKey}
                   copyError={copyError}
                   onCopy={copyValue}
@@ -724,9 +765,9 @@ function App() {
               </div>
 
               <div className="tags">
-                <span className="badge">{activePlugin.hub?.status ?? 'unknown'}</span>
+                <span className="badge">{activePlugin.hub?.status ?? t(language, 'unknown')}</span>
                 <span className="badge">
-                  {formatMarketplaceValue(activePlugin.hub?.provenance?.type)}
+                  {formatMarketplaceValue(activePlugin.hub?.provenance?.type, language)}
                 </span>
                 {(activePlugin.tags ?? []).map((item) => (
                   <span key={item}>{item}</span>
@@ -735,22 +776,22 @@ function App() {
 
               <div className="metaGrid">
                 <div>
-                  <strong>Source</strong>
+                  <strong>{t(language, 'source')}</strong>
                   <span>{activePlugin.source}</span>
                 </div>
                 <div>
-                  <strong>Maintainer</strong>
-                  <span>{activePlugin.hub?.maintainer?.name ?? activePlugin.author?.name ?? 'Unknown'}</span>
+                  <strong>{t(language, 'maintainer')}</strong>
+                  <span>{activePlugin.hub?.maintainer?.name ?? activePlugin.author?.name ?? t(language, 'unknownMaintainer')}</span>
                 </div>
                 <div>
-                  <strong>License</strong>
-                  <span>{activePlugin.hub?.provenance?.license ?? activePlugin.license ?? 'Unspecified'}</span>
+                  <strong>{t(language, 'license')}</strong>
+                  <span>{activePlugin.hub?.provenance?.license ?? activePlugin.license ?? t(language, 'unspecified')}</span>
                 </div>
                 <div>
-                  <strong>Inventory</strong>
+                  <strong>{t(language, 'inventory')}</strong>
                   <span>
                     <ShieldCheck size={15} />
-                    {activePlugin.inventory.skills} skills · {activePlugin.inventory.scripts} scripts ·{' '}
+                    {activePlugin.inventory.skills} skills / {activePlugin.inventory.scripts} scripts /{' '}
                     {activePlugin.inventory.files} files
                   </span>
                 </div>
@@ -758,7 +799,7 @@ function App() {
 
               {activePlugin.hub?.useCases?.length ? (
                 <div className="textPanel">
-                  <h3>Use cases</h3>
+                  <h3>{t(language, 'useCases')}</h3>
                   <ul>
                     {activePlugin.hub.useCases.map((item) => (
                       <li key={item}>{item}</li>
@@ -769,7 +810,7 @@ function App() {
 
               {activePlugin.hub?.warnings?.length ? (
                 <div className="textPanel warningPanel">
-                  <h3>Warnings</h3>
+                  <h3>{t(language, 'warnings')}</h3>
                   <ul>
                     {activePlugin.hub.warnings.map((item) => (
                       <li key={item}>{item}</li>
@@ -779,15 +820,15 @@ function App() {
               ) : null}
             </>
           ) : (
-            <div className="emptyState">Select a plugin to inspect details.</div>
+            <div className="emptyState">{t(language, 'selectPlugin')}</div>
           )}
         </section>
 
-        <section className="explorer" aria-label="Plugin file explorer">
+        <section className="explorer" aria-label={t(language, 'pluginFileExplorer')}>
           <div className="explorerTree">
             <div className="panelHeader">
-              <strong>Files</strong>
-              <span>{activePlugin ? `plugins/${activePlugin.name}` : 'no plugin'}</span>
+              <strong>{t(language, 'files')}</strong>
+              <span>{activePlugin ? `plugins/${activePlugin.name}` : t(language, 'noPlugin')}</span>
             </div>
             {visibleEntries.length ? (
               <div className="treeList">
@@ -812,18 +853,18 @@ function App() {
                 ))}
               </div>
             ) : (
-              <div className="emptyState">No previewable tree.</div>
+              <div className="emptyState">{t(language, 'noPreviewTree')}</div>
             )}
           </div>
 
           <div className="previewPane">
             <div className="panelHeader">
-              <strong>{selectedFile ?? 'No file selected'}</strong>
+              <strong>{selectedFile ?? t(language, 'noFileSelected')}</strong>
               <div className="previewActions">
                 {selectedFile ? (
                   <button type="button" onClick={() => copyValue(selectedFile, `path:${selectedFile}`)}>
                     {copiedKey === `path:${selectedFile}` ? <Check size={14} /> : <Copy size={14} />}
-                    path
+                    {t(language, 'path')}
                   </button>
                 ) : null}
                 {selectedEntry ? (
@@ -838,7 +879,7 @@ function App() {
             {selectedEntry && selectedContent ? (
               <>
                 <div className="fileMeta">
-                  {formatSize(selectedEntry.size)} · {selectedEntry.extension || 'text'}
+                  {formatSize(selectedEntry.size)} / {selectedEntry.extension || t(language, 'textFile')}
                 </div>
                 <pre className="codePreview">{selectedContent}</pre>
                 <button
@@ -847,22 +888,22 @@ function App() {
                   onClick={() => copyValue(selectedContent, `content:${selectedFile}`)}
                 >
                   {copiedKey === `content:${selectedFile}` ? <Check size={15} /> : <Copy size={15} />}
-                  copy content
+                  {t(language, 'copyContent')}
                 </button>
               </>
             ) : selectedEntry ? (
               <div className="emptyState">
                 {selectedEntry.isLarge || !selectedEntry.isText
-                  ? 'Preview unavailable for binary or large files.'
-                  : 'File content is not in the generated catalog.'}
+                  ? t(language, 'binaryPreviewUnavailable')
+                  : t(language, 'fileContentMissing')}
                 <a href={selectedEntry.rawUrl} target="_blank" rel="noreferrer">
-                  view raw
+                  {t(language, 'viewRaw')}
                 </a>
               </div>
             ) : activePlugin ? (
-              <div className="emptyState">This plugin has no default preview file.</div>
+              <div className="emptyState">{t(language, 'noDefaultPreview')}</div>
             ) : (
-              <div className="emptyState">Load a plugin to browse files.</div>
+              <div className="emptyState">{t(language, 'loadPluginToBrowse')}</div>
             )}
           </div>
         </section>

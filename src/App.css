@@ -73,23 +73,6 @@ h3 {
   font-size: 14px;
 }
 
-.statusDot {
-  min-height: 30px;
-  display: inline-flex;
-  align-items: center;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 0 10px;
-  color: var(--text-secondary);
-  background: rgba(10, 9, 8, 0.72);
-  font-size: 12px;
-}
-
-.statusDot.ready {
-  border-color: var(--accent-dim);
-  color: var(--accent-bright);
-}
-
 .iconButton,
 .textIconButton {
   display: inline-flex;
@@ -101,6 +84,22 @@ h3 {
   color: var(--text-primary);
   background: rgba(14, 12, 10, 0.88);
   cursor: pointer;
+}
+
+.topbarFilter {
+  display: inline-flex;
+  height: 36px;
+  align-items: center;
+  gap: 7px;
+  color: var(--text-bright);
+}
+
+.topbarFilter .filterMenu {
+  width: 112px;
+}
+
+.topbarFilter .filterTrigger {
+  height: 36px;
 }
 
 .iconButton {
