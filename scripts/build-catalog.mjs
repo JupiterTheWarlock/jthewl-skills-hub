@@ -18,7 +18,7 @@ import {
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const hubRoot = path.resolve(__dirname, '..')
 const skillsRoot = path.resolve(hubRoot, '..', 'jthewl-skills')
-const consensusProfilePath = path.resolve(
+const defaultConsensusProfilePath = path.resolve(
   hubRoot,
   '..',
   '.agents',
@@ -27,6 +27,7 @@ const consensusProfilePath = path.resolve(
   'data',
   'profile.json',
 )
+const consensusProfilePath = process.env.CONSENSUS_PROFILE_PATH ?? defaultConsensusProfilePath
 const marketplacePath = path.join(skillsRoot, '.claude-plugin', 'marketplace.json')
 const hubMetadataRoot = path.join(skillsRoot, '.jthewl-hub', 'plugins')
 const outputPath = path.join(hubRoot, 'public', 'data', 'catalog.json')
@@ -64,6 +65,24 @@ async function readOptionalJson(filePath) {
     if (error?.code === 'ENOENT') return null
     throw error
   }
+}
+
+async function readBrandProfile() {
+  const profile = await readOptionalJson(consensusProfilePath)
+  if (profile) return profile
+
+  const existingCatalog = await readOptionalJson(outputPath)
+  if (existingCatalog?.brand) {
+    console.warn(`Consensus profile missing at ${consensusProfilePath}; reusing brand data from ${path.relative(hubRoot, outputPath)}`)
+    return {
+      identity: existingCatalog.brand.identity,
+      avatar: existingCatalog.brand.avatar,
+      color_scheme: existingCatalog.brand.colorScheme,
+      social: existingCatalog.brand.social,
+    }
+  }
+
+  throw new Error(`Consensus profile missing at ${consensusProfilePath} and no catalog brand fallback exists`)
 }
 
 function latestCommitDate(pluginSource) {
@@ -162,7 +181,7 @@ async function buildCatalog() {
     console.log('Optional mode: sibling marketplace missing, switched to remote clone')
   }
 
-  const [marketplace, profile] = await Promise.all([readJson(activeMarketplacePath), readJson(consensusProfilePath)])
+  const [marketplace, profile] = await Promise.all([readJson(activeMarketplacePath), readBrandProfile()])
 
   const plugins = await Promise.all(
     marketplace.plugins.map(async (plugin) => {
