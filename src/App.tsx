@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, type CSSProperties } from 'react'
 import {
   AlertCircle,
+  ArrowLeft,
   Check,
   ChevronDown,
   ChevronRight,
@@ -9,7 +10,8 @@ import {
   File,
   Folder,
   Languages,
-  Package,
+  LayoutGrid,
+  List,
   Search,
   ShieldCheck,
   Terminal,
@@ -332,6 +334,56 @@ function FilterMenu({
   )
 }
 
+function SkillCard({
+  plugin,
+  language,
+  onClick,
+}: {
+  plugin: CatalogPlugin
+  language: Language
+  onClick: () => void
+}) {
+  const hasTooltip = !!(
+    plugin.hub?.useCases?.length
+  )
+
+  return (
+    <button className="skillCard" type="button" onClick={onClick}>
+      <div className="skillCardHeader">
+        <span className="skillCardCategory">{plugin.category ?? t(language, 'plugin')}</span>
+        {plugin.hub?.status ? (
+          <span className="skillCardStatus">{plugin.hub.status}</span>
+        ) : null}
+      </div>
+      <h3 className="skillCardName">{plugin.name}</h3>
+      <p className="skillCardDesc">
+        {plugin.hub?.hubDesc ?? plugin.description}
+      </p>
+      <div className="skillCardFooter">
+        <div className="skillCardTags">
+          {(plugin.tags ?? []).slice(0, 3).map((tagItem) => (
+            <span key={tagItem}>{tagItem}</span>
+          ))}
+        </div>
+        <span className="skillCardDate">{formatDate(plugin.updatedAt, language)}</span>
+      </div>
+      {hasTooltip ? (
+        <div className="skillCardTooltip">
+          {plugin.hub?.hubDesc ? (
+            <p className="tooltipDesc">{plugin.hub.hubDesc}</p>
+          ) : null}
+          {plugin.hub?.useCases?.length ? (
+            <div className="tooltipSection">
+              <strong>{t(language, 'useCases')}</strong>
+              <ul>{plugin.hub.useCases.map((item) => <li key={item}>{item}</li>)}</ul>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+    </button>
+  )
+}
+
 function App() {
   const [state, setState] = useState<LoadState>({ status: 'loading' })
   const [language, setLanguage] = useState<Language>(() =>
@@ -343,7 +395,11 @@ function App() {
   const [tag, setTag] = useState('all')
   const [recentOnly, setRecentOnly] = useState(false)
   const [openFilter, setOpenFilter] = useState('')
-  const [activeName, setActiveName] = useState<string | null>(null)
+  const [activeName, setActiveName] = useState<string | null>(() => {
+    const hash = window.location.hash
+    return hash.startsWith('#/') ? decodeURIComponent(hash.slice(2)) || null : null
+  })
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [selectedFiles, setSelectedFiles] = useState<Record<string, string>>({})
   const [openFolderPaths, setOpenFolderPaths] = useState<Record<string, string[]>>({})
   const [copiedKey, setCopiedKey] = useState<string | null>(null)
@@ -352,6 +408,15 @@ function App() {
   useEffect(() => {
     window.localStorage.setItem('jthewl-skills-hub-language', language)
   }, [language])
+
+  useEffect(() => {
+    function onHashChange() {
+      const hash = window.location.hash
+      setActiveName(hash.startsWith('#/') ? decodeURIComponent(hash.slice(2)) || null : null)
+    }
+    window.addEventListener('hashchange', onHashChange)
+    return () => window.removeEventListener('hashchange', onHashChange)
+  }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -363,7 +428,6 @@ function App() {
         const data = (await response.json()) as Catalog
         if (!cancelled) {
           setState({ status: 'ready', data })
-          setActiveName(data.plugins[0]?.name ?? null)
         }
       } catch (error) {
         if (!cancelled) {
@@ -433,16 +497,17 @@ function App() {
     })
   }, [category, fallbackCategory, normalizedQuery, plugins, provenance, recentOnly, recentThreshold, tag])
 
-  const activePlugin =
-    filteredPlugins.find((plugin) => plugin.name === activeName) ?? filteredPlugins[0] ?? null
+  const activePlugin = activeName
+    ? plugins.find((plugin) => plugin.name === activeName) ?? null
+    : null
 
   const defaultOpenFolders = useMemo(() => {
     if (!activePlugin) return new Set<string>()
     return new Set(
       activePlugin.fileTree
-      .filter((entry) => entry.type === 'directory')
-      .map((entry) => entry.path)
-      .slice(0, 6),
+        .filter((entry) => entry.type === 'directory')
+        .map((entry) => entry.path)
+        .slice(0, 6),
     )
   }, [activePlugin])
 
@@ -604,99 +669,15 @@ function App() {
         </div>
       </section>
 
-      <section className="workspace">
-        <aside className="sidebar" aria-label={t(language, 'pluginBrowser')}>
-          <label className="searchBox">
-            <Search size={16} />
-            <input
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder={t(language, 'searchPlaceholder')}
-              type="search"
-            />
-          </label>
-
-          <div className="filters" aria-label={t(language, 'pluginFilters')}>
-            <FilterMenu
-              id="category"
-              label={t(language, 'category')}
-              allLabel={t(language, 'anyCategory')}
-              value={category}
-              options={categories}
-              open={openFilter === 'category'}
-              onToggle={setOpenFilter}
-              onSelect={setCategory}
-            />
-            <FilterMenu
-              id="origin"
-              label={t(language, 'marketplaceFilter')}
-              allLabel={t(language, 'anyMarketplace')}
-              value={provenance}
-              options={provenances}
-              open={openFilter === 'origin'}
-              onToggle={setOpenFilter}
-              onSelect={setProvenance}
-              formatValue={(value) =>
-                value === 'all' ? t(language, 'anyMarketplace') : formatMarketplaceValue(value, language)
-              }
-            />
-            <FilterMenu
-              id="tag"
-              label={t(language, 'tag')}
-              allLabel={t(language, 'anyTag')}
-              value={tag}
-              options={tags}
-              open={openFilter === 'tag'}
-              onToggle={setOpenFilter}
-              onSelect={setTag}
-            />
-            <label className="checkFilter">
-              <input
-                checked={recentOnly}
-                onChange={(event) => setRecentOnly(event.target.checked)}
-                type="checkbox"
-              />
-              {t(language, 'updatedRecently')}
-            </label>
-          </div>
-
-          {state.status === 'loading' ? <div className="notice">{t(language, 'loadingCatalog')}</div> : null}
-          {state.status === 'error' ? (
-            <div className="notice error">
-              <AlertCircle size={18} />
-              <span>{state.message}</span>
-              <a href={`${MARKETPLACE_REPO_URL}/blob/main/.claude-plugin/marketplace.json`} target="_blank" rel="noreferrer">
-                {t(language, 'rawFallback')}
-              </a>
-            </div>
-          ) : null}
-
-          <div className="pluginList">
-            {filteredPlugins.map((plugin) => (
-              <button
-                className={plugin.name === activePlugin?.name ? 'pluginRow active' : 'pluginRow'}
-                key={plugin.name}
-                type="button"
-                onClick={() => setActiveName(plugin.name)}
-              >
-                <Package size={17} />
-                <span>
-                  <strong>{plugin.name}</strong>
-                  <small>
-                    {plugin.hub?.shortLabel ?? plugin.category ?? t(language, 'plugin')} / {formatDate(plugin.updatedAt, language)}
-                  </small>
-                </span>
+      <section className="content">
+        {activePlugin ? (
+          <>
+            <div className="detailTop">
+              <button className="backButton" type="button" onClick={() => { window.location.hash = '' }}>
+                <ArrowLeft size={16} />
+                {t(language, 'backToGallery')}
               </button>
-            ))}
-            {state.status === 'ready' && filteredPlugins.length === 0 ? (
-              <div className="emptyState">{t(language, 'noMatchingPlugins')}</div>
-            ) : null}
-          </div>
-        </aside>
 
-        <section className="detail" aria-label={t(language, 'pluginDetail')}>
-          {activePlugin ? (
-            <>
               <div className="detailHeader">
                 <div>
                   <p className="eyebrow">{activePlugin.category ?? t(language, 'plugin')}</p>
@@ -818,95 +799,191 @@ function App() {
                   </ul>
                 </div>
               ) : null}
-            </>
-          ) : (
-            <div className="emptyState">{t(language, 'selectPlugin')}</div>
-          )}
-        </section>
-
-        <section className="explorer" aria-label={t(language, 'pluginFileExplorer')}>
-          <div className="explorerTree">
-            <div className="panelHeader">
-              <strong>{t(language, 'files')}</strong>
-              <span>{activePlugin ? `plugins/${activePlugin.name}` : t(language, 'noPlugin')}</span>
-            </div>
-            {visibleEntries.length ? (
-              <div className="treeList">
-                {visibleEntries.map((entry) => (
-                  <button
-                    className={entry.path === selectedFile ? 'treeRow selected' : 'treeRow'}
-                    key={`${entry.type}:${entry.path}`}
-                    style={{ paddingLeft: 10 + depthOf(entry.path) * 14 }}
-                    type="button"
-                    onClick={() =>
-                      entry.type === 'directory' ? toggleFolder(entry.path) : selectFile(entry.path)
-                    }
-                  >
-                    {entry.type === 'directory' ? (
-                      openFolders.has(entry.path) ? <ChevronDown size={14} /> : <ChevronRight size={14} />
-                    ) : (
-                      <File size={14} />
-                    )}
-                    {entry.type === 'directory' ? <Folder size={14} /> : null}
-                    <span>{entry.path.split('/').at(-1)}</span>
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <div className="emptyState">{t(language, 'noPreviewTree')}</div>
-            )}
-          </div>
-
-          <div className="previewPane">
-            <div className="panelHeader">
-              <strong>{selectedFile ?? t(language, 'noFileSelected')}</strong>
-              <div className="previewActions">
-                {selectedFile ? (
-                  <button type="button" onClick={() => copyValue(selectedFile, `path:${selectedFile}`)}>
-                    {copiedKey === `path:${selectedFile}` ? <Check size={14} /> : <Copy size={14} />}
-                    {t(language, 'path')}
-                  </button>
-                ) : null}
-                {selectedEntry ? (
-                  <a href={selectedEntry.githubUrl} rel="noreferrer">
-                    <ExternalLink size={14} />
-                    GitHub
-                  </a>
-                ) : null}
-              </div>
             </div>
 
-            {selectedEntry && selectedContent ? (
-              <>
-                <div className="fileMeta">
-                  {formatSize(selectedEntry.size)} / {selectedEntry.extension || t(language, 'textFile')}
+            <div className="detailBottom">
+              <div className="explorerTree">
+                <div className="panelHeader">
+                  <strong>{t(language, 'files')}</strong>
+                  <span>{`plugins/${activePlugin.name}`}</span>
                 </div>
-                <pre className="codePreview">{selectedContent}</pre>
+                {visibleEntries.length ? (
+                  <div className="treeList">
+                    {visibleEntries.map((entry) => (
+                      <button
+                        className={entry.path === selectedFile ? 'treeRow selected' : 'treeRow'}
+                        key={`${entry.type}:${entry.path}`}
+                        style={{ paddingLeft: 10 + depthOf(entry.path) * 14 }}
+                        type="button"
+                        onClick={() =>
+                          entry.type === 'directory' ? toggleFolder(entry.path) : selectFile(entry.path)
+                        }
+                      >
+                        {entry.type === 'directory' ? (
+                          openFolders.has(entry.path) ? <ChevronDown size={14} /> : <ChevronRight size={14} />
+                        ) : (
+                          <File size={14} />
+                        )}
+                        {entry.type === 'directory' ? <Folder size={14} /> : null}
+                        <span>{entry.path.split('/').at(-1)}</span>
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="emptyState">{t(language, 'noPreviewTree')}</div>
+                )}
+              </div>
+
+              <div className="previewPane">
+                <div className="panelHeader">
+                  <strong>{selectedFile ?? t(language, 'noFileSelected')}</strong>
+                  <div className="previewActions">
+                    {selectedFile ? (
+                      <button type="button" onClick={() => copyValue(selectedFile, `path:${selectedFile}`)}>
+                        {copiedKey === `path:${selectedFile}` ? <Check size={14} /> : <Copy size={14} />}
+                        {t(language, 'path')}
+                      </button>
+                    ) : null}
+                    {selectedEntry ? (
+                      <a href={selectedEntry.githubUrl} rel="noreferrer">
+                        <ExternalLink size={14} />
+                        GitHub
+                      </a>
+                    ) : null}
+                  </div>
+                </div>
+
+                {selectedEntry && selectedContent ? (
+                  <>
+                    <div className="fileMeta">
+                      {formatSize(selectedEntry.size)} / {selectedEntry.extension || t(language, 'textFile')}
+                    </div>
+                    <pre className="codePreview">{selectedContent}</pre>
+                    <button
+                      className="copyContent"
+                      type="button"
+                      onClick={() => copyValue(selectedContent, `content:${selectedFile}`)}
+                    >
+                      {copiedKey === `content:${selectedFile}` ? <Check size={15} /> : <Copy size={15} />}
+                      {t(language, 'copyContent')}
+                    </button>
+                  </>
+                ) : selectedEntry ? (
+                  <div className="emptyState">
+                    {selectedEntry.isLarge || !selectedEntry.isText
+                      ? t(language, 'binaryPreviewUnavailable')
+                      : t(language, 'fileContentMissing')}
+                    <a href={selectedEntry.rawUrl} target="_blank" rel="noreferrer">
+                      {t(language, 'viewRaw')}
+                    </a>
+                  </div>
+                ) : (
+                  <div className="emptyState">{t(language, 'noDefaultPreview')}</div>
+                )}
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="filterBar">
+              <label className="searchBox">
+                <Search size={16} />
+                <input
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder={t(language, 'searchPlaceholder')}
+                  type="search"
+                />
+              </label>
+              <div className="filterBarFilters">
+                <FilterMenu
+                  id="category"
+                  label={t(language, 'category')}
+                  allLabel={t(language, 'anyCategory')}
+                  value={category}
+                  options={categories}
+                  open={openFilter === 'category'}
+                  onToggle={setOpenFilter}
+                  onSelect={setCategory}
+                />
+                <FilterMenu
+                  id="origin"
+                  label={t(language, 'marketplaceFilter')}
+                  allLabel={t(language, 'anyMarketplace')}
+                  value={provenance}
+                  options={provenances}
+                  open={openFilter === 'origin'}
+                  onToggle={setOpenFilter}
+                  onSelect={setProvenance}
+                  formatValue={(value) =>
+                    value === 'all' ? t(language, 'anyMarketplace') : formatMarketplaceValue(value, language)
+                  }
+                />
+                <FilterMenu
+                  id="tag"
+                  label={t(language, 'tag')}
+                  allLabel={t(language, 'anyTag')}
+                  value={tag}
+                  options={tags}
+                  open={openFilter === 'tag'}
+                  onToggle={setOpenFilter}
+                  onSelect={setTag}
+                />
+                <label className="checkFilter">
+                  <input
+                    checked={recentOnly}
+                    onChange={(event) => setRecentOnly(event.target.checked)}
+                    type="checkbox"
+                  />
+                  {t(language, 'updatedRecently')}
+                </label>
+              </div>
+              <div className="viewToggle">
                 <button
-                  className="copyContent"
                   type="button"
-                  onClick={() => copyValue(selectedContent, `content:${selectedFile}`)}
+                  className={viewMode === 'grid' ? 'active' : ''}
+                  onClick={() => setViewMode('grid')}
+                  aria-label="Grid view"
                 >
-                  {copiedKey === `content:${selectedFile}` ? <Check size={15} /> : <Copy size={15} />}
-                  {t(language, 'copyContent')}
+                  <LayoutGrid size={16} />
                 </button>
-              </>
-            ) : selectedEntry ? (
-              <div className="emptyState">
-                {selectedEntry.isLarge || !selectedEntry.isText
-                  ? t(language, 'binaryPreviewUnavailable')
-                  : t(language, 'fileContentMissing')}
-                <a href={selectedEntry.rawUrl} target="_blank" rel="noreferrer">
-                  {t(language, 'viewRaw')}
+                <button
+                  type="button"
+                  className={viewMode === 'list' ? 'active' : ''}
+                  onClick={() => setViewMode('list')}
+                  aria-label="List view"
+                >
+                  <List size={16} />
+                </button>
+              </div>
+            </div>
+
+            {state.status === 'loading' ? <div className="notice">{t(language, 'loadingCatalog')}</div> : null}
+            {state.status === 'error' ? (
+              <div className="notice error">
+                <AlertCircle size={18} />
+                <span>{state.message}</span>
+                <a href={`${MARKETPLACE_REPO_URL}/blob/main/.claude-plugin/marketplace.json`} target="_blank" rel="noreferrer">
+                  {t(language, 'rawFallback')}
                 </a>
               </div>
-            ) : activePlugin ? (
-              <div className="emptyState">{t(language, 'noDefaultPreview')}</div>
-            ) : (
-              <div className="emptyState">{t(language, 'loadPluginToBrowse')}</div>
-            )}
-          </div>
-        </section>
+            ) : null}
+
+            <div className={viewMode === 'grid' ? 'skillGrid' : 'skillList'}>
+              {filteredPlugins.map((plugin) => (
+                <SkillCard
+                  key={plugin.name}
+                  plugin={plugin}
+                  language={language}
+                  onClick={() => { window.location.hash = `#/${plugin.name}` }}
+                />
+              ))}
+            </div>
+            {state.status === 'ready' && filteredPlugins.length === 0 ? (
+              <div className="emptyState">{t(language, 'noMatchingPlugins')}</div>
+            ) : null}
+          </>
+        )}
       </section>
     </main>
   )
